@@ -1,0 +1,1568 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+      /* ============================================================
+         RESET & ROOT
+         ============================================================ */
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+      :root {
+        --rose: #D48989;
+        --rose-light: #E8B4B4;
+        --rose-dark: #B86B6B;
+        --blush: #FFF5F5;
+        --blush-2: #FFEEEE;
+        --mauve: #8B5E83;
+        --lavender: #B8A9C9;
+        --cream: #FFFAF5;
+        --white: #FFFFFF;
+        --text: #3D2B2B;
+        --text-light: #8A7A7A;
+        --text-muted: #B5A5A5;
+        --shadow: 0 4px 24px rgba(180, 120, 120, 0.10);
+        --shadow-hover: 0 8px 32px rgba(180, 120, 120, 0.18);
+        --radius: 16px;
+        --radius-sm: 10px;
+        --radius-xs: 8px;
+        --sidebar-w: 240px;
+        --header-font: 'Playfair Display', Georgia, serif;
+        --body-font: 'Inter', -apple-system, sans-serif;
+        --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      html { height: 100%; }
+      body {
+        font-family: var(--body-font);
+        background: var(--blush);
+        color: var(--text);
+        min-height: 100vh;
+        display: flex;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      /* ============================================================
+         SCROLLBAR
+         ============================================================ */
+      ::-webkit-scrollbar { width: 6px; }
+      ::-webkit-scrollbar-track { background: transparent; }
+      ::-webkit-scrollbar-thumb { background: var(--rose-light); border-radius: 3px; }
+      ::-webkit-scrollbar-thumb:hover { background: var(--rose); }
+
+      /* ============================================================
+         SIDEBAR
+         ============================================================ */
+      .sidebar {
+        width: var(--sidebar-w);
+        min-height: 100vh;
+        background: var(--white);
+        border-right: 1px solid rgba(212, 137, 137, 0.12);
+        padding: 28px 0;
+        display: flex;
+        flex-direction: column;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+
+      .logo {
+        padding: 0 24px 28px;
+        border-bottom: 1px solid rgba(212, 137, 137, 0.12);
+        margin-bottom: 16px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .logo-icon {
+        width: 40px;
+        height: 40px;
+        background: linear-gradient(135deg, var(--rose), var(--mauve));
+        border-radius: var(--radius-sm);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 20px;
+        flex-shrink: 0;
+      }
+
+      .logo-text {
+        font-family: var(--header-font);
+        font-size: 17px;
+        font-weight: 700;
+        color: var(--text);
+        line-height: 1.2;
+      }
+
+      .logo-sub {
+        font-size: 11px;
+        color: var(--text-light);
+        font-weight: 400;
+        font-family: var(--body-font);
+        letter-spacing: 0.3px;
+      }
+
+      .nav-section {
+        padding: 0 12px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+
+      .nav-label {
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        padding: 12px 12px 8px;
+      }
+
+      .nav-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 16px;
+        border-radius: var(--radius-sm);
+        color: var(--text-light);
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: var(--transition);
+        position: relative;
+        border: none;
+        background: none;
+        width: 100%;
+        text-align: left;
+      }
+
+      .nav-item i {
+        font-size: 18px;
+        width: 22px;
+        text-align: center;
+        color: var(--text-muted);
+        transition: var(--transition);
+      }
+
+      .nav-item:hover {
+        background: var(--blush);
+        color: var(--text);
+      }
+
+      .nav-item:hover i { color: var(--rose); }
+
+      .nav-item.active {
+        background: linear-gradient(135deg, rgba(212, 137, 137, 0.12), rgba(139, 94, 131, 0.06));
+        color: var(--rose-dark);
+        font-weight: 600;
+      }
+
+      .nav-item.active i { color: var(--rose); }
+
+      .nav-item .badge-nav {
+        margin-left: auto;
+        background: var(--rose);
+        color: white;
+        font-size: 10px;
+        font-weight: 700;
+        padding: 2px 8px;
+        border-radius: 999px;
+      }
+
+      .sidebar-footer {
+        padding: 20px 24px 0;
+        border-top: 1px solid rgba(212, 137, 137, 0.12);
+        margin-top: 8px;
+      }
+
+      .sidebar-footer .version {
+        font-size: 11px;
+        color: var(--text-muted);
+      }
+
+      /* ============================================================
+         MAIN
+         ============================================================ */
+      .main {
+        flex: 1;
+        padding: 32px 36px;
+        max-width: calc(100vw - var(--sidebar-w));
+        overflow-x: hidden;
+      }
+
+      .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 28px;
+        gap: 16px;
+        flex-wrap: wrap;
+      }
+
+      .page-header h1 {
+        font-family: var(--header-font);
+        font-size: 28px;
+        font-weight: 700;
+        color: var(--text);
+        line-height: 1.2;
+      }
+
+      .page-header p {
+        font-size: 14px;
+        color: var(--text-light);
+        margin-top: 4px;
+      }
+
+      .page-header-right {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+
+      /* ============================================================
+         TABS
+         ============================================================ */
+      .tab-content { display: none; }
+      .tab-content.active { display: block; }
+
+      /* ============================================================
+         CARDS
+         ============================================================ */
+      .card {
+        background: var(--white);
+        border-radius: var(--radius);
+        padding: 24px;
+        box-shadow: var(--shadow);
+        transition: var(--transition);
+      }
+
+      .card:hover { box-shadow: var(--shadow-hover); }
+
+      .card-title {
+        font-family: var(--header-font);
+        font-size: 18px;
+        font-weight: 600;
+        color: var(--text);
+        margin-bottom: 18px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .card-title i {
+        color: var(--rose);
+        font-size: 18px;
+      }
+
+      /* ============================================================
+         FORM ELEMENTS
+         ============================================================ */
+      .form-group {
+        margin-bottom: 16px;
+      }
+
+      .form-group label {
+        display: block;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--text);
+        margin-bottom: 6px;
+      }
+
+      .form-group label .required {
+        color: var(--rose);
+        margin-left: 2px;
+      }
+
+      input, select, textarea {
+        width: 100%;
+        padding: 11px 14px;
+        border: 1.5px solid rgba(212, 137, 137, 0.2);
+        border-radius: var(--radius-xs);
+        font-family: var(--body-font);
+        font-size: 14px;
+        color: var(--text);
+        background: var(--white);
+        transition: var(--transition);
+        outline: none;
+      }
+
+      input:focus, select:focus, textarea:focus {
+        border-color: var(--rose);
+        box-shadow: 0 0 0 3px rgba(212, 137, 137, 0.15);
+      }
+
+      textarea { resize: vertical; min-height: 80px; }
+
+      /* ============================================================
+         BUTTONS
+         ============================================================ */
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 11px 20px;
+        border: none;
+        border-radius: var(--radius-xs);
+        font-family: var(--body-font);
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: var(--transition);
+        text-decoration: none;
+        line-height: 1;
+      }
+
+      .btn-primary {
+        background: linear-gradient(135deg, var(--rose), var(--rose-dark));
+        color: white;
+      }
+
+      .btn-primary:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 16px rgba(212, 137, 137, 0.35);
+      }
+
+      .btn-primary:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+      }
+
+      .btn-secondary {
+        background: var(--blush-2);
+        color: var(--rose-dark);
+      }
+
+      .btn-secondary:hover {
+        background: rgba(212, 137, 137, 0.2);
+      }
+
+      .btn-danger {
+        background: #FFF0F0;
+        color: #D44;
+      }
+
+      .btn-danger:hover {
+        background: #FFE0E0;
+      }
+
+      .btn-ghost {
+        background: transparent;
+        color: var(--text-light);
+      }
+
+      .btn-ghost:hover {
+        background: var(--blush);
+        color: var(--text);
+      }
+
+      .btn-sm { padding: 8px 14px; font-size: 13px; }
+      .btn-full { width: 100%; }
+
+      /* ============================================================
+         GRID / LAYOUT
+         ============================================================ */
+      .grid-2 {
+        display: grid;
+        grid-template-columns: 1.2fr 0.8fr;
+        gap: 24px;
+      }
+
+      .grid-4 {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 16px;
+        margin-bottom: 24px;
+      }
+
+      .stat-card {
+        background: var(--white);
+        border-radius: var(--radius);
+        padding: 20px;
+        box-shadow: var(--shadow);
+        transition: var(--transition);
+      }
+
+      .stat-card:hover { box-shadow: var(--shadow-hover); }
+
+      .stat-label {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .stat-value {
+        font-family: var(--header-font);
+        font-size: 24px;
+        font-weight: 700;
+        color: var(--text);
+        margin-top: 6px;
+      }
+
+      .stat-value.gradient {
+        background: linear-gradient(135deg, var(--rose), var(--mauve));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      /* ============================================================
+         TABLE
+         ============================================================ */
+      .table-wrap {
+        overflow-x: auto;
+        margin-top: 4px;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      th, td {
+        padding: 12px 14px;
+        text-align: left;
+        font-size: 13px;
+        border-bottom: 1px solid rgba(212, 137, 137, 0.08);
+      }
+
+      th {
+        font-weight: 600;
+        color: var(--text-light);
+        background: var(--blush);
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.4px;
+        white-space: nowrap;
+      }
+
+      td { color: var(--text); }
+      .right { text-align: right; }
+      .empty { color: var(--text-muted); font-style: italic; padding: 24px !important; text-align: center !important; }
+
+      /* ============================================================
+         BADGES
+         ============================================================ */
+      .badge {
+        display: inline-block;
+        padding: 4px 10px;
+        border-radius: 999px;
+        font-size: 11px;
+        font-weight: 600;
+      }
+
+      .badge.booked { background: #F0EEFF; color: #6C63FF; }
+      .badge.done { background: #E8F7EC; color: #166534; }
+      .badge.cancelled { background: #FDE8E8; color: #991B1B; }
+      .badge.no_show { background: #FFF3E0; color: #9A3412; }
+      .badge.paid { background: #E8F7EC; color: #166534; }
+      .badge.partial { background: #FFF3E0; color: #9A3412; }
+      .badge.unpaid { background: #FDE8E8; color: #991B1B; }
+
+      /* ============================================================
+         STATUS BOX
+         ============================================================ */
+      .status-box {
+        display: none;
+        padding: 14px 18px;
+        border-radius: var(--radius-sm);
+        margin-bottom: 18px;
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 1.4;
+      }
+
+      .status-box.show { display: block; }
+      .status-box.success { background: #E8F7EC; color: #166534; border-left: 4px solid #166534; }
+      .status-box.error { background: #FDE8E8; color: #991B1B; border-left: 4px solid #991B1B; }
+      .status-box.info { background: #F0EEFF; color: #4A3FB5; border-left: 4px solid #6C63FF; }
+
+      /* ============================================================
+         RECEIPT
+         ============================================================ */
+      .receipt-card {
+        display: none;
+        margin-top: 20px;
+        border: 1.5px dashed var(--rose-light);
+        border-radius: var(--radius);
+        padding: 20px;
+        background: var(--cream);
+      }
+
+      .receipt-card.show { display: block; }
+
+      .receipt-header {
+        text-align: center;
+        border-bottom: 1.5px dashed var(--rose-light);
+        padding-bottom: 14px;
+        margin-bottom: 14px;
+      }
+
+      .receipt-header h3 {
+        font-family: var(--header-font);
+        font-size: 20px;
+        color: var(--text);
+      }
+
+      .receipt-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        margin: 8px 0;
+        font-size: 13px;
+      }
+
+      .receipt-items {
+        border-top: 1px dashed rgba(212, 137, 137, 0.3);
+        border-bottom: 1px dashed rgba(212, 137, 137, 0.3);
+        padding: 10px 0;
+        margin: 10px 0;
+      }
+
+      .receipt-total {
+        border-top: 1.5px dashed var(--rose-light);
+        padding-top: 12px;
+        margin-top: 10px;
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--rose-dark);
+      }
+
+      .receipt-footer {
+        text-align: center;
+        margin-top: 14px;
+        font-size: 12px;
+        color: var(--text-muted);
+        font-style: italic;
+      }
+
+      /* ============================================================
+         LOADING
+         ============================================================ */
+      .loading-overlay {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        padding: 40px;
+        color: var(--text-light);
+        font-size: 14px;
+      }
+
+      .spinner {
+        width: 20px;
+        height: 20px;
+        border: 2.5px solid var(--rose-light);
+        border-top-color: var(--rose);
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+      }
+
+      @keyframes spin { to { transform: rotate(360deg); } }
+
+      /* ============================================================
+         TOOLBAR
+         ============================================================ */
+      .toolbar {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+
+      .toolbar input { width: auto; min-width: 160px; margin-bottom: 0; }
+
+      /* ============================================================
+         PRINT
+         ============================================================ */
+      @media print {
+        .sidebar, .no-print, .status-box { display: none !important; }
+        .main { max-width: 100%; padding: 0; }
+        body { background: white; }
+        .card { box-shadow: none; border: 1px solid #eee; }
+        .receipt-card { border: none; }
+      }
+
+      /* ============================================================
+         RESPONSIVE
+         ============================================================ */
+      @media (max-width: 900px) {
+        .sidebar { width: 60px; padding: 16px 0; }
+        .sidebar .logo { padding: 0 12px 16px; justify-content: center; }
+        .logo-text, .logo-sub, .nav-label, .nav-item span, .badge-nav, .sidebar-footer { display: none; }
+        .nav-item { justify-content: center; padding: 12px; }
+        .nav-section { padding: 0 8px; }
+        .main { padding: 20px; max-width: calc(100vw - 60px); }
+        .grid-2 { grid-template-columns: 1fr; }
+        .grid-4 { grid-template-columns: repeat(2, 1fr); }
+      }
+
+      @media (max-width: 600px) {
+        .grid-4 { grid-template-columns: 1fr; }
+        .stat-value { font-size: 20px; }
+        .main { padding: 16px; }
+        .page-header h1 { font-size: 22px; }
+      }
+
+      /* ============================================================
+         MISC
+         ============================================================ */
+      .flex { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+      .mt-2 { margin-top: 16px; }
+      .mb-2 { margin-bottom: 16px; }
+      .gap { gap: 24px; }
+      .small { font-size: 12px; color: var(--text-light); }
+      .divider { border: none; border-top: 1px solid rgba(212, 137, 137, 0.1); margin: 20px 0; }
+    </style>
+  </head>
+
+  <body>
+    <!-- ============================================================
+    SIDEBAR
+    ============================================================ -->
+    <aside class="sidebar">
+      <div class="logo">
+        <div class="logo-icon">
+          <i class="fa-solid fa-sparkles"></i>
+        </div>
+        <div>
+          <div class="logo-text">Salon Eyelash</div>
+          <div class="logo-sub">POS & Booking System</div>
+        </div>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-label">Menu</div>
+        <button class="nav-item active" data-tab="pos" onclick="switchTab('pos')">
+          <i class="fa-solid fa-cart-shopping"></i>
+          <span>POS Kasir</span>
+        </button>
+        <button class="nav-item" data-tab="booking" onclick="switchTab('booking')">
+          <i class="fa-solid fa-calendar-check"></i>
+          <span>Booking</span>
+        </button>
+        <button class="nav-item" data-tab="report" onclick="switchTab('report')">
+          <i class="fa-solid fa-chart-simple"></i>
+          <span>Laporan</span>
+        </button>
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="version">v3.0 &middot; Salon Eyelash</div>
+      </div>
+    </aside>
+
+    <!-- ============================================================
+    MAIN CONTENT
+    ============================================================ -->
+    <main class="main">
+
+      <!-- ============================================================
+      TAB: POS
+      ============================================================ -->
+      <div id="tab-pos" class="tab-content active">
+        <div class="page-header">
+          <div>
+            <h1>POS Kasir</h1>
+            <p>Transaksi layanan salon</p>
+          </div>
+        </div>
+
+        <div id="posLoading" class="loading-overlay">
+          <div class="spinner"></div>
+          Memuat data layanan dan therapist...
+        </div>
+
+        <div id="posApp" class="grid-2" style="display:none;">
+          <!-- Left: Input -->
+          <div class="card">
+            <div class="card-title">
+              <i class="fa-solid fa-pen-to-square"></i> Input Transaksi
+            </div>
+
+            <div class="form-group">
+              <label>Nama Customer</label>
+              <input id="posCustomerName" type="text" placeholder="Contoh: Luna">
+            </div>
+
+            <div class="form-group">
+              <label>No. HP</label>
+              <input id="posCustomerPhone" type="text" placeholder="08123456789">
+            </div>
+
+            <div class="form-group">
+              <label>Instagram</label>
+              <input id="posCustomerInstagram" type="text" placeholder="@customer">
+            </div>
+
+            <div class="form-group">
+              <label>Therapist Utama</label>
+              <select id="posStaffSelect"></select>
+            </div>
+
+            <div class="form-group">
+              <label>Pilih Layanan</label>
+              <select id="posServiceSelect"></select>
+            </div>
+
+            <button class="btn btn-secondary btn-full" onclick="posAddService()">
+              <i class="fa-solid fa-plus"></i> Tambah Layanan
+            </button>
+
+            <hr class="divider">
+
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Layanan</th>
+                    <th class="right">Qty</th>
+                    <th class="right">Harga</th>
+                    <th class="right">Total</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody id="posItemsBody">
+                  <tr><td colspan="5" class="empty">Belum ada layanan dipilih.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Right: Payment -->
+          <div>
+            <div class="card">
+              <div class="card-title">
+                <i class="fa-solid fa-wallet"></i> Pembayaran
+              </div>
+
+              <div class="form-group">
+                <label>Diskon Transaksi</label>
+                <input id="posDiscount" type="number" value="0" oninput="posRenderItems()">
+              </div>
+
+              <div class="form-group">
+                <label>Metode Pembayaran</label>
+                <select id="posPaymentMethod"></select>
+              </div>
+
+              <div class="form-group">
+                <label>Jumlah Bayar</label>
+                <input id="posPaymentAmount" type="number" value="0">
+              </div>
+
+              <div class="form-group">
+                <label>Catatan</label>
+                <textarea id="posNotes" rows="2" placeholder="Catatan transaksi"></textarea>
+              </div>
+
+              <div style="background: var(--blush); border-radius: var(--radius-sm); padding: 16px; margin: 16px 0;">
+                <div class="flex" style="justify-content:space-between;">
+                  <span style="font-size:14px;color:var(--text-light);">Subtotal</span>
+                  <strong id="posSubtotalText" style="font-size:14px;">Rp0</strong>
+                </div>
+                <div class="flex" style="justify-content:space-between;margin-top:6px;">
+                  <span style="font-size:14px;color:var(--text-light);">Diskon</span>
+                  <strong id="posDiscountText" style="font-size:14px;">Rp0</strong>
+                </div>
+                <div class="flex" style="justify-content:space-between;margin-top:10px;padding-top:10px;border-top:1.5px solid rgba(212,137,137,0.2);">
+                  <span style="font-size:18px;font-weight:700;">Total</span>
+                  <span id="posGrandTotalText" style="font-family:var(--header-font);font-size:22px;font-weight:700;background:linear-gradient(135deg,var(--rose),var(--rose-dark));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Rp0</span>
+                </div>
+              </div>
+
+              <button id="posSaveBtn" class="btn btn-primary btn-full" onclick="posSave()">
+                <i class="fa-solid fa-check"></i> Simpan Transaksi
+              </button>
+            </div>
+
+            <div id="posStatusBox" class="status-box"></div>
+
+            <!-- Receipt -->
+            <div id="posReceipt" class="receipt-card">
+              <div class="receipt-header">
+                <h3 id="posRBusiness" style="font-size:18px;">Salon Eyelash</h3>
+                <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">Struk Transaksi</div>
+              </div>
+              <div class="receipt-row">
+                <span>No. Transaksi</span>
+                <strong id="posRId" style="color:var(--rose-dark);">-</strong>
+              </div>
+              <div class="receipt-row">
+                <span>Tanggal</span>
+                <span id="posRDate">-</span>
+              </div>
+              <div class="receipt-row">
+                <span>Customer</span>
+                <span id="posRCustomer">-</span>
+              </div>
+              <div class="receipt-row">
+                <span>Therapist</span>
+                <span id="posRStaff">-</span>
+              </div>
+              <div id="posRItems" class="receipt-items"></div>
+              <div class="receipt-row">
+                <span>Subtotal</span>
+                <span id="posRSubtotal">Rp0</span>
+              </div>
+              <div class="receipt-row">
+                <span>Diskon</span>
+                <span id="posRDiscount">Rp0</span>
+              </div>
+              <div class="receipt-row">
+                <span>Pajak</span>
+                <span id="posRTax">Rp0</span>
+              </div>
+              <div class="receipt-row receipt-total">
+                <span>Total</span>
+                <span id="posRGrandTotal">Rp0</span>
+              </div>
+              <div class="receipt-row">
+                <span>Pembayaran</span>
+                <span id="posRPayment">-</span>
+              </div>
+              <div class="receipt-row">
+                <span>Status</span>
+                <span id="posRStatus" class="badge paid">-</span>
+              </div>
+              <div class="receipt-footer">Terima kasih atas kunjungan Anda. ✨</div>
+              <br>
+              <button class="btn btn-secondary btn-full no-print" onclick="window.print()">
+                <i class="fa-solid fa-print"></i> Cetak Struk
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================================
+      TAB: BOOKING
+      ============================================================ -->
+      <div id="tab-booking" class="tab-content">
+        <div class="page-header">
+          <div>
+            <h1>Booking</h1>
+            <p>Input jadwal appointment customer</p>
+          </div>
+        </div>
+
+        <div id="bkgStatusBox" class="status-box"></div>
+
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-title">
+              <i class="fa-solid fa-calendar-plus"></i> Tambah Booking
+            </div>
+
+            <div class="form-group">
+              <label>Tanggal <span class="required">*</span></label>
+              <input id="bkgDate" type="date">
+            </div>
+            <div class="form-group">
+              <label>Jam <span class="required">*</span></label>
+              <input id="bkgTime" type="time">
+            </div>
+            <div class="form-group">
+              <label>Nama Customer <span class="required">*</span></label>
+              <input id="bkgName" type="text" placeholder="Contoh: Luna">
+            </div>
+            <div class="form-group">
+              <label>No. HP</label>
+              <input id="bkgPhone" type="text" placeholder="08123456789">
+            </div>
+            <div class="form-group">
+              <label>Instagram</label>
+              <input id="bkgInstagram" type="text" placeholder="@customer">
+            </div>
+            <div class="form-group">
+              <label>Layanan <span class="required">*</span></label>
+              <select id="bkgService"><option value="">Memuat...</option></select>
+            </div>
+            <div class="form-group">
+              <label>Therapist <span class="required">*</span></label>
+              <select id="bkgStaff"><option value="">Memuat...</option></select>
+            </div>
+            <div class="form-group">
+              <label>Status</label>
+              <select id="bkgStatus">
+                <option value="booked">Booked</option>
+                <option value="done">Done</option>
+                <option value="cancelled">Cancelled</option>
+                <option value="no_show">No Show</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Catatan</label>
+              <textarea id="bkgNotes" rows="2" placeholder="Catatan booking"></textarea>
+            </div>
+
+            <button id="bkgSaveBtn" class="btn btn-primary btn-full" onclick="bkgSave()">
+              <i class="fa-solid fa-floppy-disk"></i> Simpan Booking
+            </button>
+          </div>
+
+          <div class="card">
+            <div class="card-title">
+              <i class="fa-solid fa-list"></i> Daftar Booking Harian
+            </div>
+
+            <div class="toolbar mb-2">
+              <input id="bkgListDate" type="date">
+              <button class="btn btn-secondary btn-sm" onclick="bkgLoad()">
+                <i class="fa-solid fa-arrows-rotate"></i> Muat
+              </button>
+            </div>
+
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Jam</th>
+                    <th>Customer</th>
+                    <th>Layanan</th>
+                    <th>Therapist</th>
+                    <th>Status</th>
+                    <th>Aksi</th>
+                  </tr>
+                </thead>
+                <tbody id="bkgBody">
+                  <tr><td colspan="6" class="empty">Memuat data...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================================
+      TAB: REPORT
+      ============================================================ -->
+      <div id="tab-report" class="tab-content">
+        <div class="page-header">
+          <div>
+            <h1>Laporan Harian</h1>
+            <p>Ringkasan omzet, pembayaran, therapist, dan komisi</p>
+          </div>
+          <div class="page-header-right">
+            <div class="toolbar">
+              <input id="rptDate" type="date">
+              <button class="btn btn-primary btn-sm" onclick="rptLoad()">
+                <i class="fa-solid fa-magnifying-glass"></i> Muat
+              </button>
+              <button class="btn btn-secondary btn-sm" onclick="rptTestConnection()">
+                <i class="fa-solid fa-wifi"></i> Test
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div id="rptStatusBox" class="status-box"></div>
+
+        <div class="grid-4">
+          <div class="stat-card">
+            <div class="stat-label">Transaksi</div>
+            <div id="rptCount" class="stat-value">0</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Omzet Bersih</div>
+            <div id="rptOmzet" class="stat-value gradient">Rp0</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Telah Dibayar</div>
+            <div id="rptPaid" class="stat-value">Rp0</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Belum Dibayar</div>
+            <div id="rptUnpaid" class="stat-value">Rp0</div>
+          </div>
+        </div>
+
+        <div class="grid-2" style="margin-bottom:24px;">
+          <div class="card">
+            <div class="card-title"><i class="fa-solid fa-credit-card"></i> Pembayaran per Metode</div>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Metode</th><th class="right">Jumlah</th><th class="right">Total</th></tr></thead>
+                <tbody id="rptPaymentBody"><tr><td colspan="3" class="empty">Memuat...</td></tr></tbody>
+              </table>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title"><i class="fa-solid fa-user"></i> Performa Therapist</div>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Therapist</th><th class="right">Transaksi</th><th class="right">Layanan</th><th class="right">Omzet</th></tr></thead>
+                <tbody id="rptTherapistBody"><tr><td colspan="4" class="empty">Memuat...</td></tr></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-bottom:20px;">
+          <div class="card-title"><i class="fa-solid fa-coins"></i> Komisi Therapist</div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Therapist</th><th class="right">Qty</th><th class="right">Omzet</th><th class="right">Tipe</th><th class="right">Nilai</th><th class="right">Komisi</th></tr></thead>
+              <tbody id="rptCommissionBody"><tr><td colspan="6" class="empty">Memuat...</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="card" style="margin-bottom:20px;">
+          <div class="card-title"><i class="fa-solid fa-scissors"></i> Layanan Terjual</div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Layanan</th><th class="right">Qty</th><th class="right">Omzet</th></tr></thead>
+              <tbody id="rptServiceBody"><tr><td colspan="3" class="empty">Memuat...</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title"><i class="fa-solid fa-receipt"></i> Daftar Transaksi</div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>No.</th><th>Tanggal</th><th>Customer</th><th>Therapist</th><th>Pembayaran</th><th>Status</th><th class="right">Total</th><th class="right">Dibayar</th></tr></thead>
+              <tbody id="rptTransactionBody"><tr><td colspan="8" class="empty">Memuat...</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </main>
+
+    <!-- ============================================================
+    JAVASCRIPT
+    ============================================================ -->
+    <script>
+      /* ============================================================
+         TAB SWITCHING
+         ============================================================ */
+      function switchTab(tab) {
+        document.querySelectorAll('.tab-content').forEach(function(el) { el.classList.remove('active'); });
+        document.getElementById('tab-' + tab).classList.add('active');
+        document.querySelectorAll('.nav-item').forEach(function(el) { el.classList.remove('active'); });
+        document.querySelector('.nav-item[data-tab="' + tab + '"]').classList.add('active');
+
+        if (tab === 'booking' && !window._bkgInited) { bkgInit(); }
+        if (tab === 'report' && !window._rptInited) { rptInit(); }
+        if (tab === 'pos' && !window._posInited) { posInit(); }
+      }
+
+      /* ============================================================
+         UTILITIES
+         ============================================================ */
+      function formatRupiah(value) {
+        return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(Number(value || 0));
+      }
+
+      function escapeHtml(value) {
+        return String(value || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+      }
+
+      function escapeJs(value) {
+        return String(value || '').replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/"/g,'\\"');
+      }
+
+      function getToday() {
+        var d = new Date();
+        return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+      }
+
+      function getNowTime() {
+        var d = new Date();
+        return String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0');
+      }
+
+      function showStatus(boxEl, type, msg) {
+        boxEl.className = 'status-box show ' + type;
+        boxEl.textContent = msg;
+      }
+
+      function hideStatus(boxEl) {
+        boxEl.className = 'status-box';
+        boxEl.textContent = '';
+      }
+
+      function getErrorMessage(err) {
+        if (!err) return 'Error tidak diketahui.';
+        if (err.message) return err.message;
+        return String(err);
+      }
+
+      /* ============================================================
+         TAB: POS
+         ============================================================ */
+      var posData = { services: [], staff: [], payment_methods: [] };
+      var posCart = [];
+
+      function posInit() {
+        window._posInited = true;
+        document.getElementById('posLoading').style.display = 'flex';
+        document.getElementById('posApp').style.display = 'none';
+
+        google.script.run
+          .withSuccessHandler(function(data) {
+            posData = data;
+            posFillDropdowns();
+            document.getElementById('posLoading').style.display = 'none';
+            document.getElementById('posApp').style.display = 'grid';
+          })
+          .withFailureHandler(function(err) {
+            showStatus(document.getElementById('posStatusBox'), 'error', 'Gagal memuat data: ' + getErrorMessage(err));
+            document.getElementById('posLoading').querySelector('.spinner').style.display = 'none';
+          })
+          .getPOSInitialData();
+      }
+
+      function posFillDropdowns() {
+        var staffSel = document.getElementById('posStaffSelect');
+        staffSel.innerHTML = '';
+        posData.staff.forEach(function(s) {
+          var o = document.createElement('option');
+          o.value = s.staff_id;
+          o.textContent = s.staff_name;
+          staffSel.appendChild(o);
+        });
+
+        var svcSel = document.getElementById('posServiceSelect');
+        svcSel.innerHTML = '';
+        posData.services.forEach(function(svc) {
+          var o = document.createElement('option');
+          o.value = svc.service_id;
+          o.textContent = svc.service_name + ' - ' + formatRupiah(svc.price);
+          svcSel.appendChild(o);
+        });
+
+        var pmSel = document.getElementById('posPaymentMethod');
+        pmSel.innerHTML = '';
+        posData.payment_methods.forEach(function(m) {
+          var o = document.createElement('option');
+          o.value = m;
+          o.textContent = m;
+          pmSel.appendChild(o);
+        });
+      }
+
+      function posAddService() {
+        var svcId = document.getElementById('posServiceSelect').value;
+        var staffId = document.getElementById('posStaffSelect').value;
+        var svc = posData.services.find(function(s) { return s.service_id === svcId; });
+        if (!svc) { showStatus(document.getElementById('posStatusBox'), 'error', 'Pilih layanan dulu.'); return; }
+        posCart.push({ item_type: 'service', item_id_ref: svc.service_id, item_name: svc.service_name, qty: 1, unit_price: svc.price, discount: 0, staff_id: staffId });
+        posRenderItems();
+        hideStatus(document.getElementById('posStatusBox'));
+      }
+
+      function posRemoveItem(idx) {
+        posCart.splice(idx, 1);
+        posRenderItems();
+      }
+
+      function posRenderItems() {
+        var tbody = document.getElementById('posItemsBody');
+        if (posCart.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="5" class="empty">Belum ada layanan dipilih.</td></tr>';
+        } else {
+          tbody.innerHTML = '';
+          posCart.forEach(function(item, idx) {
+            var lineTotal = Number(item.qty) * Number(item.unit_price);
+            var tr = document.createElement('tr');
+            tr.innerHTML = '<td>' + escapeHtml(item.item_name) + '</td>' +
+              '<td class="right">' + item.qty + '</td>' +
+              '<td class="right">' + formatRupiah(item.unit_price) + '</td>' +
+              '<td class="right">' + formatRupiah(lineTotal) + '</td>' +
+              '<td class="right"><button class="btn btn-danger btn-sm" onclick="posRemoveItem(' + idx + ')"><i class="fa-solid fa-trash-can"></i></button></td>';
+            tbody.appendChild(tr);
+          });
+        }
+        posUpdateTotals();
+      }
+
+      function posUpdateTotals() {
+        var subtotal = posCart.reduce(function(t, item) { return t + Number(item.qty) * Number(item.unit_price); }, 0);
+        var discount = Number(document.getElementById('posDiscount').value || 0);
+        var grandTotal = subtotal - discount;
+        document.getElementById('posSubtotalText').textContent = formatRupiah(subtotal);
+        document.getElementById('posDiscountText').textContent = formatRupiah(discount);
+        document.getElementById('posGrandTotalText').textContent = formatRupiah(grandTotal);
+        document.getElementById('posPaymentAmount').value = grandTotal;
+      }
+
+      function posSave() {
+        if (posCart.length === 0) { showStatus(document.getElementById('posStatusBox'), 'error', 'Tambahkan minimal 1 layanan.'); return; }
+
+        var order = {
+          customer: {
+            customer_name: document.getElementById('posCustomerName').value.trim(),
+            phone: document.getElementById('posCustomerPhone').value.trim(),
+            instagram: document.getElementById('posCustomerInstagram').value.trim()
+          },
+          staff_id: document.getElementById('posStaffSelect').value,
+          items: posCart,
+          discount: Number(document.getElementById('posDiscount').value || 0),
+          tax: 0,
+          payment: {
+            method: document.getElementById('posPaymentMethod').value,
+            amount: Number(document.getElementById('posPaymentAmount').value || 0),
+            reference_no: ''
+          },
+          notes: document.getElementById('posNotes').value.trim()
+        };
+
+        var btn = document.getElementById('posSaveBtn');
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Menyimpan...';
+
+        google.script.run
+          .withSuccessHandler(function(result) {
+            showStatus(document.getElementById('posStatusBox'), 'success',
+              'Transaksi berhasil! ID: ' + result.transaction_id + ' | Total: ' + formatRupiah(result.grand_total));
+            posLoadReceipt(result.transaction_id);
+            posResetForm();
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fa-solid fa-check"></i> Simpan Transaksi';
+          })
+          .withFailureHandler(function(err) {
+            showStatus(document.getElementById('posStatusBox'), 'error', 'Gagal: ' + getErrorMessage(err));
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fa-solid fa-check"></i> Simpan Transaksi';
+          })
+          .savePOSTransaction(order);
+      }
+
+      function posResetForm() {
+        document.getElementById('posCustomerName').value = '';
+        document.getElementById('posCustomerPhone').value = '';
+        document.getElementById('posCustomerInstagram').value = '';
+        document.getElementById('posDiscount').value = 0;
+        document.getElementById('posPaymentAmount').value = 0;
+        document.getElementById('posNotes').value = '';
+        posCart = [];
+        posRenderItems();
+      }
+
+      function posLoadReceipt(txId) {
+        google.script.run
+          .withSuccessHandler(function(receipt) {
+            document.getElementById('posRBusiness').textContent = receipt.business_name || 'Salon Eyelash';
+            document.getElementById('posRId').textContent = receipt.transaction_id;
+            document.getElementById('posRDate').textContent = receipt.transaction_date;
+            document.getElementById('posRCustomer').textContent = receipt.customer_name;
+            document.getElementById('posRStaff').textContent = receipt.staff_name;
+
+            var box = document.getElementById('posRItems');
+            box.innerHTML = '';
+            receipt.items.forEach(function(item) {
+              var div = document.createElement('div');
+              div.className = 'receipt-item';
+              div.innerHTML = '<div><strong>' + escapeHtml(item.item_name) + '</strong></div>' +
+                '<div class="receipt-row"><span>' + item.qty + ' x ' + formatRupiah(item.unit_price) + '</span><span>' + formatRupiah(item.line_total) + '</span></div>';
+              box.appendChild(div);
+            });
+
+            document.getElementById('posRSubtotal').textContent = formatRupiah(receipt.subtotal);
+            document.getElementById('posRDiscount').textContent = formatRupiah(receipt.discount);
+            document.getElementById('posRTax').textContent = formatRupiah(receipt.tax);
+            document.getElementById('posRGrandTotal').textContent = formatRupiah(receipt.grand_total);
+
+            var pmText = (receipt.payments && receipt.payments.length > 0)
+              ? receipt.payments.map(function(p) { return p.method + ' - ' + formatRupiah(p.amount); }).join(', ')
+              : '-';
+            document.getElementById('posRPayment').textContent = pmText;
+
+            var statusEl = document.getElementById('posRStatus');
+            statusEl.textContent = receipt.payment_status || '-';
+            statusEl.className = 'badge ' + (receipt.payment_status || 'unpaid');
+
+            document.getElementById('posReceipt').classList.add('show');
+          })
+          .withFailureHandler(function(err) {
+            showStatus(document.getElementById('posStatusBox'), 'error', 'Transaksi tersimpan, tapi struk gagal dimuat: ' + getErrorMessage(err));
+          })
+          .getTransactionReceipt(txId);
+      }
+
+      /* ============================================================
+         TAB: BOOKING
+         ============================================================ */
+      var bkgData = { services: [], staff: [], statuses: [] };
+
+      function bkgInit() {
+        window._bkgInited = true;
+        document.getElementById('bkgDate').value = getToday();
+        document.getElementById('bkgListDate').value = getToday();
+        document.getElementById('bkgTime').value = getNowTime();
+
+        showStatus(document.getElementById('bkgStatusBox'), 'info', 'Memuat data...');
+
+        google.script.run
+          .withSuccessHandler(function(data) {
+            bkgData = data || { services: [], staff: [], statuses: [] };
+            bkgFillDropdowns();
+            hideStatus(document.getElementById('bkgStatusBox'));
+            bkgLoad();
+          })
+          .withFailureHandler(function(err) {
+            showStatus(document.getElementById('bkgStatusBox'), 'error', 'Gagal memuat data: ' + getErrorMessage(err));
+          })
+          .getBookingInitialDataV6();
+      }
+
+      function bkgFillDropdowns() {
+        var svcSel = document.getElementById('bkgService');
+        svcSel.innerHTML = '<option value="">Pilih layanan</option>';
+        if (bkgData.services) {
+          bkgData.services.forEach(function(svc) {
+            var o = document.createElement('option');
+            o.value = svc.service_id;
+            o.textContent = svc.service_name + ' - ' + formatRupiah(svc.price);
+            svcSel.appendChild(o);
+          });
+        }
+
+        var staffSel = document.getElementById('bkgStaff');
+        staffSel.innerHTML = '<option value="">Pilih therapist</option>';
+        if (bkgData.staff) {
+          bkgData.staff.forEach(function(s) {
+            var o = document.createElement('option');
+            o.value = s.staff_id;
+            o.textContent = s.staff_name;
+            staffSel.appendChild(o);
+          });
+        }
+      }
+
+      function bkgSave() {
+        var booking = {
+          booking_date: document.getElementById('bkgDate').value,
+          booking_time: document.getElementById('bkgTime').value,
+          customer_name: document.getElementById('bkgName').value.trim(),
+          phone: document.getElementById('bkgPhone').value.trim(),
+          instagram: document.getElementById('bkgInstagram').value.trim(),
+          service_id: document.getElementById('bkgService').value,
+          staff_id: document.getElementById('bkgStaff').value,
+          status: document.getElementById('bkgStatus').value,
+          notes: document.getElementById('bkgNotes').value.trim()
+        };
+
+        if (!booking.booking_date) { showStatus(document.getElementById('bkgStatusBox'), 'error', 'Tanggal booking wajib diisi.'); return; }
+        if (!booking.booking_time) { showStatus(document.getElementById('bkgStatusBox'), 'error', 'Jam booking wajib diisi.'); return; }
+        if (!booking.customer_name) { showStatus(document.getElementById('bkgStatusBox'), 'error', 'Nama customer wajib diisi.'); return; }
+        if (!booking.service_id) { showStatus(document.getElementById('bkgStatusBox'), 'error', 'Layanan wajib dipilih.'); return; }
+        if (!booking.staff_id) { showStatus(document.getElementById('bkgStatusBox'), 'error', 'Therapist wajib dipilih.'); return; }
+
+        var btn = document.getElementById('bkgSaveBtn');
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Menyimpan...';
+
+        google.script.run
+          .withSuccessHandler(function(result) {
+            showStatus(document.getElementById('bkgStatusBox'), 'success', 'Booking berhasil! ID: ' + result.booking_id);
+            document.getElementById('bkgListDate').value = booking.booking_date;
+            bkgResetForm();
+            bkgLoad();
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Simpan Booking';
+          })
+          .withFailureHandler(function(err) {
+            showStatus(document.getElementById('bkgStatusBox'), 'error', 'Gagal: ' + getErrorMessage(err));
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Simpan Booking';
+          })
+          .saveBooking(booking);
+      }
+
+      function bkgResetForm() {
+        document.getElementById('bkgName').value = '';
+        document.getElementById('bkgPhone').value = '';
+        document.getElementById('bkgInstagram').value = '';
+        document.getElementById('bkgNotes').value = '';
+        document.getElementById('bkgService').value = '';
+        document.getElementById('bkgStaff').value = '';
+        document.getElementById('bkgStatus').value = 'booked';
+      }
+
+      function bkgLoad() {
+        var date = document.getElementById('bkgListDate').value;
+        if (!date) { showStatus(document.getElementById('bkgStatusBox'), 'error', 'Pilih tanggal dulu.'); return; }
+
+        document.getElementById('bkgBody').innerHTML = '<tr><td colspan="6" class="empty">Memuat...</td></tr>';
+
+        google.script.run
+          .withSuccessHandler(function(rows) {
+            bkgRender(rows || []);
+          })
+          .withFailureHandler(function(err) {
+            document.getElementById('bkgBody').innerHTML = '<tr><td colspan="6" class="empty">Gagal memuat.</td></tr>';
+            showStatus(document.getElementById('bkgStatusBox'), 'error', 'Gagal: ' + getErrorMessage(err));
+          })
+          .getBookingsByDateV6(date);
+      }
+
+      function bkgRender(rows) {
+        var body = document.getElementById('bkgBody');
+        body.innerHTML = '';
+        if (!rows || rows.length === 0) {
+          body.innerHTML = '<tr><td colspan="6" class="empty">Belum ada booking di tanggal ini.</td></tr>';
+          return;
+        }
+        rows.forEach(function(row) {
+          var tr = document.createElement('tr');
+          tr.innerHTML = '<td><strong>' + escapeHtml(row.booking_time || '-') + '</strong><div class="small">' + escapeHtml(row.booking_id || '') + '</div></td>' +
+            '<td>' + escapeHtml(row.customer_name || '-') + (row.notes ? '<div class="small">' + escapeHtml(row.notes) + '</div>' : '') + '</td>' +
+            '<td>' + escapeHtml(row.service_name || '-') + '</td>' +
+            '<td>' + escapeHtml(row.staff_name || '-') + '</td>' +
+            '<td><span class="badge ' + escapeHtml(row.status || 'booked') + '">' + escapeHtml(row.status || '-') + '</span></td>' +
+            '<td><select style="margin:0;width:auto;padding:6px 8px;font-size:12px;" onchange="bkgChangeStatus(\'' + escapeJs(row.booking_id) + '\',this.value)">' +
+              '<option value="">Ubah</option><option value="booked">Booked</option><option value="done">Done</option><option value="cancelled">Batal</option><option value="no_show">No Show</option>' +
+            '</select></td>';
+          body.appendChild(tr);
+        });
+      }
+
+      function bkgChangeStatus(id, status) {
+        if (!id || !status) return;
+        showStatus(document.getElementById('bkgStatusBox'), 'info', 'Mengubah status...');
+        google.script.run
+          .withSuccessHandler(function() {
+            showStatus(document.getElementById('bkgStatusBox'), 'success', 'Status berhasil diubah.');
+            bkgLoad();
+          })
+          .withFailureHandler(function(err) {
+            showStatus(document.getElementById('bkgStatusBox'), 'error', 'Gagal: ' + getErrorMessage(err));
+          })
+          .updateBookingStatus(id, status);
+      }
+
+      /* ============================================================
+         TAB: REPORT
+         ============================================================ */
+      function rptInit() {
+        window._rptInited = true;
+        document.getElementById('rptDate').value = getToday();
+        rptLoad();
+      }
+
+      function rptTestConnection() {
+        showStatus(document.getElementById('rptStatusBox'), 'info', 'Menguji koneksi...');
+        var timeoutId = setTimeout(function() {
+          showStatus(document.getElementById('rptStatusBox'), 'error', 'Tidak ada balasan. Mungkin Web App perlu redeploy.');
+        }, 10000);
+
+        google.script.run
+          .withSuccessHandler(function(result) {
+            clearTimeout(timeoutId);
+            showStatus(document.getElementById('rptStatusBox'), 'info', result || 'Koneksi OK');
+          })
+          .withFailureHandler(function(err) {
+            clearTimeout(timeoutId);
+            showStatus(document.getElementById('rptStatusBox'), 'error', 'Koneksi gagal: ' + getErrorMessage(err));
+          })
+          .pingReportV2();
+      }
+
+      function rptLoad() {
+        var date = document.getElementById('rptDate').value;
+        if (!date) { showStatus(document.getElementById('rptStatusBox'), 'error', 'Pilih tanggal.'); return; }
+
+        showStatus(document.getElementById('rptStatusBox'), 'info', 'Memuat laporan...');
+
+        google.script.run
+          .withSuccessHandler(function(report) {
+            try {
+              rptRender(report);
+              hideStatus(document.getElementById('rptStatusBox'));
+            } catch (err) {
+              showStatus(document.getElementById('rptStatusBox'), 'error', 'Data dimuat tapi gagal ditampilkan: ' + err.message);
+            }
+          })
+          .withFailureHandler(function(err) {
+            showStatus(document.getElementById('rptStatusBox'), 'error', 'Gagal: ' + getErrorMessage(err));
+          })
+          .getDailySalesReportV3(date);
+      }
+
+      function rptRender(report) {
+        if (!report || !report.summary) throw new Error('Data laporan kosong.');
+
+        document.getElementById('rptCount').textContent = report.summary.transaction_count || 0;
+        document.getElementById('rptOmzet').textContent = formatRupiah(report.summary.grand_total || 0);
+        document.getElementById('rptPaid').textContent = formatRupiah(report.summary.total_paid || 0);
+        document.getElementById('rptUnpaid').textContent = formatRupiah(report.summary.unpaid_amount || 0);
+
+        rptRenderTable('rptPaymentBody', report.payment_breakdown || [],
+          function(r) { return '<tr><td>' + escapeHtml(r.method || '-') + '</td><td class="right">' + (r.count || 0) + '</td><td class="right">' + formatRupiah(r.amount || 0) + '</td></tr>'; },
+          '<tr><td colspan="3" class="empty">Belum ada pembayaran.</td></tr>');
+
+        rptRenderTable('rptTherapistBody', report.therapist_breakdown || [],
+          function(r) { return '<tr><td>' + escapeHtml(r.staff_name || '-') + '</td><td class="right">' + (r.transaction_count || 0) + '</td><td class="right">' + (r.service_qty || 0) + '</td><td class="right">' + formatRupiah(r.revenue || 0) + '</td></tr>'; },
+          '<tr><td colspan="4" class="empty">Belum ada data therapist.</td></tr>');
+
+        rptRenderTable('rptCommissionBody', report.commission_breakdown || [],
+          function(r) {
+            var isPct = String(r.commission_type || '').toLowerCase().match(/percentage|percent|persen/);
+            var valText = isPct ? (Number(r.commission_value || 0) + '%') : formatRupiah(r.commission_value || 0);
+            return '<tr><td>' + escapeHtml(r.staff_name || '-') + '</td><td class="right">' + (r.service_qty || 0) + '</td><td class="right">' + formatRupiah(r.revenue || 0) +
+              '</td><td class="right">' + (isPct ? 'Persentase' : 'Nominal') + '</td><td class="right">' + valText + '</td><td class="right"><strong>' + formatRupiah(r.commission_amount || 0) + '</strong></td></tr>';
+          },
+          '<tr><td colspan="6" class="empty">Belum ada komisi.</td></tr>');
+
+        rptRenderTable('rptServiceBody', report.service_breakdown || [],
+          function(r) { return '<tr><td>' + escapeHtml(r.item_name || '-') + '</td><td class="right">' + (r.qty || 0) + '</td><td class="right">' + formatRupiah(r.revenue || 0) + '</td></tr>'; },
+          '<tr><td colspan="3" class="empty">Belum ada layanan terjual.</td></tr>');
+
+        rptRenderTable('rptTransactionBody', report.transactions || [],
+          function(r) { return '<tr><td>' + escapeHtml(r.transaction_id || '-') + '</td><td>' + escapeHtml(r.transaction_date || '-') + '</td><td>' + escapeHtml(r.customer_name || '-') +
+            '</td><td>' + escapeHtml(r.staff_name || '-') + '</td><td>' + escapeHtml(r.payment_methods || '-') + '</td><td>' + escapeHtml(r.payment_status || '-') +
+            '</td><td class="right">' + formatRupiah(r.grand_total || 0) + '</td><td class="right">' + formatRupiah(r.paid_amount || 0) + '</td></tr>'; },
+          '<tr><td colspan="8" class="empty">Belum ada transaksi.</td></tr>');
+      }
+
+      function rptRenderTable(elId, rows, rowFn, emptyHtml) {
+        var body = document.getElementById(elId);
+        if (!rows || rows.length === 0) { body.innerHTML = emptyHtml; return; }
+        body.innerHTML = rows.map(rowFn).join('');
+      }
+
+      /* ============================================================
+         AUTO INIT
+         ============================================================ */
+      // Read ?page= from URL and switch to that tab
+      var urlParams = new URLSearchParams(window.location.search);
+      var startPage = urlParams.get('page') || 'pos';
+
+      // Override init: load the requested tab
+      function initApp() {
+        window['_posInited'] = false;
+        window['_bkgInited'] = false;
+        window['_rptInited'] = false;
+
+        switchTab(startPage);
+
+        // Load the first tab data
+        if (startPage === 'booking') bkgInit();
+        else if (startPage === 'report') rptInit();
+        else posInit();
+      }
+
+      initApp();
+    </script>
+  </body>
+</html>

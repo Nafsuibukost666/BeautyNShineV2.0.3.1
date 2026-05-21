@@ -1,0 +1,74 @@
+.login-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: linear-gradient(135deg, #FFF5F5 0%, #FFEEEE 50%, #FFF0F0 100%);
+  padding: 20px;
+  /* full viewport — keluar dari batasan #root container */
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+}
+
+/* mobile: jangan overflow */
+@media (max-width: 640px) {
+  .login-page {
+    padding: 16px;
+  }
+  .login-card {
+    padding: 32px 24px 28px;
+  }
+}
+.login-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 48px 40px 40px;
+  box-shadow: 0 8px 32px rgba(180,120,120,0.18);
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+}
+.login-card .input-wrap input {
+  padding-left: 42px;
+  font-size: 15px;
+}
+.login-card .input-wrap i {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #B5A5A5;
+  font-size: 16px;
+  z-index: 1;
+}
+.login-icon {
+  width: 72px;
+  height: 72px;
+  background: linear-gradient(135deg, #D48989, #8B5E83);
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+  font-size: 32px;
+  color: white;
+}
+.login-title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 24px;
+  font-weight: 700;
+  color: #3D2B2B;
+  margin-bottom: 4px;
+}
+.login-sub {
+  font-size: 14px;
+  color: #8A7A7A;
+  margin-bottom: 32px;
+}
+.footer {
+  margin-top: 28px;
+  font-size: 12px;
+  color: #B5A5A5;
+}
+.footer span { color: #D48989; }

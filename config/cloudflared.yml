@@ -1,0 +1,6 @@
+tunnel: beautynshine
+credentials-file: /home/ubuntu/.cloudflared/c9532044-ee43-4f09-a4f9-900815e58d1f.json
+ingress:
+  - hostname: dev.beautynshine.web.id
+    service: http://localhost:8080
+  - service: http_status:404

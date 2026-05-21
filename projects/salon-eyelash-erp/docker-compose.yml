@@ -1,0 +1,52 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: salon
+      POSTGRES_PASSWORD: salon123
+      POSTGRES_DB: salon_eyelash
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U salon -d salon_eyelash"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  app:
+    build: ./backend
+    expose:
+      - "3000"
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: salon
+      DB_PASSWORD: salon123
+      DB_NAME: salon_eyelash
+      PORT: 3000
+      JWT_SECRET: salon-eyelash-secret-key-2024
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./backend/public:/app/public
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - app
+
+  reports:
+    build: ./python-service
+    expose:
+      - "8000"
+    depends_on:
+      - db
+
+volumes:
+  pgdata:

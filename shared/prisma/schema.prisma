@@ -1,0 +1,212 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Enums
+// ─────────────────────────────────────────────────────────────────────────────
+
+enum UserRole {
+  OWNER
+  ADMIN
+  STAFF
+}
+
+enum CommissionType {
+  PERCENTAGE
+  FIXED
+}
+
+enum PaymentStatus {
+  PAID
+  PARTIAL
+  UNPAID
+}
+
+enum BookingStatus {
+  BOOKED
+  DONE
+  CANCELLED
+  NO_SHOW
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Models
+// ─────────────────────────────────────────────────────────────────────────────
+
+model User {
+  id        String    @id @default(uuid())
+  username  String    @unique
+  password  String
+  role      UserRole
+  active    Boolean   @default(true)
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+}
+
+model Customer {
+  id            String   @id @default(uuid())
+  name          String
+  phone         String?
+  instagram     String?
+  birthday      DateTime?
+  notes         String?
+  totalVisit    Int      @default(0) @map("total_visit")
+  totalSpending BigInt   @default(0) @map("total_spending")
+  active        Boolean  @default(true)
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  transactions Transaction[]
+  bookings     Booking[]
+}
+
+model Service {
+  id          String   @id @default(uuid())
+  name        String
+  category    String?
+  price       BigInt
+  durationMin Int      @default(60) @map("duration_min")
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  bookings    Booking[]
+}
+
+model Staff {
+  id              String         @id @default(uuid())
+  name            String
+  role            String         @default("Therapist")
+  phone           String?
+  commissionType  CommissionType @map("commission_type")
+  commissionValue Decimal        @default(0) @map("commission_value")
+  active          Boolean        @default(true)
+  createdAt       DateTime       @default(now()) @map("created_at")
+  updatedAt       DateTime       @updatedAt @map("updated_at")
+
+  transactions      Transaction[]
+  transactionItems  TransactionItem[]
+  commissions       Commission[]
+  bookings          Booking[]
+}
+
+model Product {
+  id           String   @id @default(uuid())
+  name         String
+  category     String?
+  sku          String?
+  costPrice    BigInt   @default(0) @map("cost_price")
+  sellingPrice BigInt   @default(0) @map("selling_price")
+  stockQty     Int      @default(0) @map("stock_qty")
+  minStock     Int      @default(5) @map("min_stock")
+  unit         String   @default("pcs")
+  active       Boolean  @default(true)
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+}
+
+model Transaction {
+  id            String        @id @default(uuid())
+  code          String        @unique
+  date          DateTime
+  customerId    String?       @map("customer_id")
+  customerName  String        @map("customer_name")
+  staffId       String?       @map("staff_id")
+  staffName     String?       @map("staff_name")
+  subtotal      BigInt
+  discount      BigInt        @default(0)
+  grandTotal    BigInt        @map("grand_total")
+  paymentStatus PaymentStatus @map("payment_status")
+  notes         String?
+  createdAt     DateTime      @default(now()) @map("created_at")
+
+  customer        Customer?         @relation(fields: [customerId], references: [id])
+  staff           Staff?            @relation(fields: [staffId], references: [id])
+  transactionItems TransactionItem[]
+  payments        Payment[]
+  commissions     Commission[]
+}
+
+model TransactionItem {
+  id             String      @id @default(uuid())
+  transactionId  String      @map("transaction_id")
+  itemType       String      @default("service") @map("item_type")
+  itemName       String      @map("item_name")
+  qty            Int
+  unitPrice      BigInt      @map("unit_price")
+  discount       BigInt      @default(0)
+  lineTotal      BigInt      @map("line_total")
+  staffId        String?     @map("staff_id")
+  staffName      String?     @map("staff_name")
+
+  transaction Transaction @relation(fields: [transactionId], references: [id])
+  staff       Staff?      @relation(fields: [staffId], references: [id])
+}
+
+model Payment {
+  id           String   @id @default(uuid())
+  transactionId String  @map("transaction_id")
+  method       String
+  amount       BigInt
+  referenceNo  String?  @map("reference_no")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  transaction Transaction @relation(fields: [transactionId], references: [id])
+}
+
+model Booking {
+  id            String        @id @default(uuid())
+  date          DateTime
+  time          String
+  customerName  String        @map("customer_name")
+  customerId    String?       @map("customer_id")
+  customerPhone String?       @map("customer_phone")
+  serviceId     String?       @map("service_id")
+  serviceName   String?       @map("service_name")
+  staffId       String?       @map("staff_id")
+  staffName     String?       @map("staff_name")
+  status        BookingStatus
+  notes         String?
+  createdAt     DateTime      @default(now()) @map("created_at")
+  updatedAt     DateTime      @updatedAt @map("updated_at")
+
+  customer Customer? @relation(fields: [customerId], references: [id])
+  service  Service?  @relation(fields: [serviceId], references: [id])
+  staff    Staff?    @relation(fields: [staffId], references: [id])
+}
+
+model Expense {
+  id          String   @id @default(uuid())
+  description String
+  amount      BigInt
+  category    String?
+  expenseDate DateTime @map("expense_date")
+  createdAt   DateTime @default(now()) @map("created_at")
+}
+
+model Commission {
+  id            String   @id @default(uuid())
+  staffId       String   @map("staff_id")
+  transactionId String   @map("transaction_id")
+  amount        BigInt
+  calculated    Boolean  @default(false)
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  staff       Staff       @relation(fields: [staffId], references: [id])
+  transaction Transaction @relation(fields: [transactionId], references: [id])
+}
+
+model Setting {
+  id    String @id @default(uuid())
+  key   String @unique
+  value String
+}

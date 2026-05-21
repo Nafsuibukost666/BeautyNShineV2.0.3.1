@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background: #f7f7f7;
+        margin: 0;
+        padding: 24px;
+        color: #222;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .header {
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+
+      .header h1 {
+        margin: 0;
+        font-size: 28px;
+      }
+
+      .header p {
+        margin: 6px 0 0;
+        color: #666;
+      }
+
+      .toolbar {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+
+      input {
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 14px;
+      }
+
+      button {
+        border: none;
+        border-radius: 10px;
+        padding: 11px 16px;
+        cursor: pointer;
+        font-weight: bold;
+        font-size: 14px;
+      }
+
+      .btn-primary {
+        background: #111;
+        color: white;
+      }
+
+      .btn-secondary {
+        background: #efefef;
+        color: #111;
+      }
+
+      .summary-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 16px;
+        margin-bottom: 20px;
+      }
+
+      .card {
+        background: white;
+        border-radius: 14px;
+        padding: 18px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+      }
+
+      .card-title {
+        font-size: 13px;
+        color: #666;
+        margin-bottom: 8px;
+      }
+
+      .card-value {
+        font-size: 24px;
+        font-weight: bold;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        margin-bottom: 20px;
+      }
+
+      h2 {
+        margin-top: 0;
+        font-size: 20px;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      th, td {
+        border-bottom: 1px solid #eee;
+        padding: 10px;
+        text-align: left;
+        font-size: 14px;
+      }
+
+      th {
+        color: #555;
+        background: #fafafa;
+      }
+
+      .right {
+        text-align: right;
+      }
+
+      .status {
+        padding: 12px;
+        border-radius: 10px;
+        margin-bottom: 16px;
+        display: none;
+      }
+
+      .status.show {
+        display: block;
+      }
+
+      .status.error {
+        background: #fdecec;
+        color: #991b1b;
+      }
+
+      .status.info {
+        background: #eef2ff;
+        color: #3730a3;
+      }
+
+      .empty {
+        color: #777;
+        font-style: italic;
+      }
+
+      @media (max-width: 900px) {
+        .summary-grid,
+        .grid {
+          grid-template-columns: 1fr;
+        }
+
+        .header {
+          display: block;
+        }
+
+        .toolbar {
+          margin-top: 14px;
+        }
+
+        body {
+          padding: 14px;
+        }
+      }
+
+      @media print {
+        button,
+        .toolbar,
+        #statusBox {
+          display: none !important;
+        }
+
+        body {
+          background: white;
+        }
+
+        .card {
+          box-shadow: none;
+          border: 1px solid #eee;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <div class="header">
+        <div>
+          <h1>Laporan Penjualan Harian</h1>
+          <p>Ringkasan omzet, pembayaran, therapist, komisi, dan transaksi</p>
+        </div>
+
+        <div class="toolbar">
+          <input id="reportDate" type="date">
+          <button class="btn-primary" onclick="loadReport()">Muat Laporan</button>
+<button class="btn-secondary" onclick="testReportConnection()">Test Koneksi</button>
+        </div>
+      </div>
+
+      <div id="statusBox" class="status"></div>
+
+      <div class="summary-grid">
+        <div class="card">
+          <div class="card-title">Jumlah Transaksi</div>
+          <div id="transactionCount" class="card-value">0</div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Omzet Bersih</div>
+          <div id="grandTotal" class="card-value">Rp0</div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Pembayaran Masuk</div>
+          <div id="totalPaid" class="card-value">Rp0</div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Belum Dibayar</div>
+          <div id="unpaidAmount" class="card-value">Rp0</div>
+        </div>
+      </div>
+
+      <div class="grid">
+        <div class="card">
+          <h2>Pembayaran per Metode</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>Metode</th>
+                <th class="right">Jumlah</th>
+                <th class="right">Total</th>
+              </tr>
+            </thead>
+            <tbody id="paymentBody"></tbody>
+          </table>
+        </div>
+
+        <div class="card">
+          <h2>Performa Therapist</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>Therapist</th>
+                <th class="right">Transaksi</th>
+                <th class="right">Layanan</th>
+                <th class="right">Omzet</th>
+              </tr>
+            </thead>
+            <tbody id="therapistBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card" style="margin-bottom: 20px;">
+        <h2>Komisi Therapist</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Therapist</th>
+              <th class="right">Qty Layanan</th>
+              <th class="right">Omzet</th>
+              <th class="right">Tipe Komisi</th>
+              <th class="right">Nilai</th>
+              <th class="right">Komisi</th>
+            </tr>
+          </thead>
+          <tbody id="commissionBody"></tbody>
+        </table>
+      </div>
+
+      <div class="card" style="margin-bottom: 20px;">
+        <h2>Layanan Terjual</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Layanan</th>
+              <th class="right">Qty</th>
+              <th class="right">Omzet</th>
+            </tr>
+          </thead>
+          <tbody id="serviceBody"></tbody>
+        </table>
+      </div>
+
+      <div class="card">
+        <h2>Daftar Transaksi</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>No. Transaksi</th>
+              <th>Tanggal</th>
+              <th>Customer</th>
+              <th>Therapist</th>
+              <th>Pembayaran</th>
+              <th>Status</th>
+              <th class="right">Total</th>
+              <th class="right">Dibayar</th>
+            </tr>
+          </thead>
+          <tbody id="transactionBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <script>
+      function initReport() {
+        showStatus("info", "Menyiapkan laporan...");
+
+        google.script.run
+          .withSuccessHandler(function(today) {
+            document.getElementById("reportDate").value = today;
+            loadReport();
+          })
+          .withFailureHandler(function(error) {
+            showStatus("error", "Gagal mengambil tanggal hari ini: " + getErrorMessage(error));
+          })
+          .getTodayForReport();
+      }
+
+function testReportConnection() {
+  showStatus("info", "Menguji koneksi ke Code.gs...");
+
+  const timeoutId = setTimeout(function() {
+    showStatus(
+      "error",
+      "Koneksi belum mendapat balasan. Kemungkinan Web App belum memakai versi terbaru."
+    );
+  }, 10000);
+
+  google.script.run
+    .withSuccessHandler(function(result) {
+      clearTimeout(timeoutId);
+
+      if (!result) {
+        showStatus("error", "Code.gs merespons, tapi hasilnya kosong.");
+        return;
+      }
+
+      showStatus("info", result);
+    })
+    .withFailureHandler(function(error) {
+      clearTimeout(timeoutId);
+
+      let message = "Error tidak diketahui.";
+
+      if (error && error.message) {
+        message = error.message;
+      } else if (error) {
+        message = String(error);
+      }
+
+      showStatus("error", "Koneksi gagal: " + message);
+    })
+    .pingReportV2();
+}
+      function loadReport() {
+        const date = document.getElementById("reportDate").value;
+
+        if (!date) {
+          showStatus("error", "Pilih tanggal laporan dulu.");
+          return;
+        }
+
+        showStatus("info", "Memuat laporan...");
+
+        google.script.run
+          .withSuccessHandler(function(report) {
+            try {
+              renderReport(report);
+              hideStatus();
+            } catch (error) {
+              showStatus("error", "Data berhasil dimuat, tapi gagal ditampilkan: " + error.message);
+              console.error(error);
+            }
+          })
+          .withFailureHandler(function(error) {
+            showStatus("error", "Gagal memuat laporan dari Code.gs: " + getErrorMessage(error));
+          })
+          .getDailySalesReportV3(date);
+      }
+
+      function renderReport(report) {
+        if (!report || !report.summary) {
+          throw new Error("Format data laporan kosong atau tidak lengkap.");
+        }
+
+        setText("transactionCount", report.summary.transaction_count || 0);
+        setText("grandTotal", formatRupiah(report.summary.grand_total || 0));
+        setText("totalPaid", formatRupiah(report.summary.total_paid || 0));
+        setText("unpaidAmount", formatRupiah(report.summary.unpaid_amount || 0));
+
+        renderPaymentBreakdown(report.payment_breakdown || []);
+        renderTherapistBreakdown(report.therapist_breakdown || []);
+        renderCommissionBreakdown(report.commission_breakdown || []);
+        renderServiceBreakdown(report.service_breakdown || []);
+        renderTransactionList(report.transactions || []);
+      }
+
+      function renderPaymentBreakdown(rows) {
+        const body = document.getElementById("paymentBody");
+        body.innerHTML = "";
+
+        if (!rows || rows.length === 0) {
+          body.innerHTML = '<tr><td colspan="3" class="empty">Belum ada pembayaran.</td></tr>';
+          return;
+        }
+
+        rows.forEach(function(row) {
+          const tr = document.createElement("tr");
+
+          tr.innerHTML = `
+            <td>${escapeHtml(row.method || "-")}</td>
+            <td class="right">${row.count || 0}</td>
+            <td class="right">${formatRupiah(row.amount || 0)}</td>
+          `;
+
+          body.appendChild(tr);
+        });
+      }
+
+      function renderTherapistBreakdown(rows) {
+        const body = document.getElementById("therapistBody");
+        body.innerHTML = "";
+
+        if (!rows || rows.length === 0) {
+          body.innerHTML = '<tr><td colspan="4" class="empty">Belum ada data therapist.</td></tr>';
+          return;
+        }
+
+        rows.forEach(function(row) {
+          const tr = document.createElement("tr");
+
+          tr.innerHTML = `
+            <td>${escapeHtml(row.staff_name || "-")}</td>
+            <td class="right">${row.transaction_count || 0}</td>
+            <td class="right">${row.service_qty || 0}</td>
+            <td class="right">${formatRupiah(row.revenue || 0)}</td>
+          `;
+
+          body.appendChild(tr);
+        });
+      }
+
+      function renderCommissionBreakdown(rows) {
+        const body = document.getElementById("commissionBody");
+        body.innerHTML = "";
+
+        if (!rows || rows.length === 0) {
+          body.innerHTML = '<tr><td colspan="6" class="empty">Belum ada komisi therapist.</td></tr>';
+          return;
+        }
+
+        rows.forEach(function(row) {
+          const tr = document.createElement("tr");
+
+          const rawType = String(row.commission_type || "percentage").toLowerCase();
+
+          const isPercentage =
+            rawType === "percentage" ||
+            rawType === "percent" ||
+            rawType === "persen";
+
+          const commissionLabel = isPercentage ? "Persentase" : "Nominal";
+
+          const valueText = isPercentage
+            ? Number(row.commission_value || 0) + "%"
+            : formatRupiah(row.commission_value || 0);
+
+          tr.innerHTML = `
+            <td>${escapeHtml(row.staff_name || "-")}</td>
+            <td class="right">${row.service_qty || 0}</td>
+            <td class="right">${formatRupiah(row.revenue || 0)}</td>
+            <td class="right">${commissionLabel}</td>
+            <td class="right">${valueText}</td>
+            <td class="right"><strong>${formatRupiah(row.commission_amount || 0)}</strong></td>
+          `;
+
+          body.appendChild(tr);
+        });
+      }
+
+      function renderServiceBreakdown(rows) {
+        const body = document.getElementById("serviceBody");
+        body.innerHTML = "";
+
+        if (!rows || rows.length === 0) {
+          body.innerHTML = '<tr><td colspan="3" class="empty">Belum ada layanan terjual.</td></tr>';
+          return;
+        }
+
+        rows.forEach(function(row) {
+          const tr = document.createElement("tr");
+
+          tr.innerHTML = `
+            <td>${escapeHtml(row.item_name || "-")}</td>
+            <td class="right">${row.qty || 0}</td>
+            <td class="right">${formatRupiah(row.revenue || 0)}</td>
+          `;
+
+          body.appendChild(tr);
+        });
+      }
+
+      function renderTransactionList(rows) {
+        const body = document.getElementById("transactionBody");
+        body.innerHTML = "";
+
+        if (!rows || rows.length === 0) {
+          body.innerHTML = '<tr><td colspan="8" class="empty">Belum ada transaksi pada tanggal ini.</td></tr>';
+          return;
+        }
+
+        rows.forEach(function(row) {
+          const tr = document.createElement("tr");
+
+          tr.innerHTML = `
+            <td>${escapeHtml(row.transaction_id || "-")}</td>
+            <td>${escapeHtml(row.transaction_date || "-")}</td>
+            <td>${escapeHtml(row.customer_name || "Walk-in Customer")}</td>
+            <td>${escapeHtml(row.staff_name || "-")}</td>
+            <td>${escapeHtml(row.payment_methods || "-")}</td>
+            <td>${escapeHtml(row.payment_status || "-")}</td>
+            <td class="right">${formatRupiah(row.grand_total || 0)}</td>
+            <td class="right">${formatRupiah(row.paid_amount || 0)}</td>
+          `;
+
+          body.appendChild(tr);
+        });
+      }
+
+      function setText(id, value) {
+        const el = document.getElementById(id);
+
+        if (!el) {
+          throw new Error("Elemen tidak ditemukan: " + id);
+        }
+
+        el.textContent = value;
+      }
+
+      function showStatus(type, message) {
+        const box = document.getElementById("statusBox");
+        box.className = "status show " + type;
+        box.textContent = message;
+      }
+
+      function hideStatus() {
+        const box = document.getElementById("statusBox");
+        box.className = "status";
+        box.textContent = "";
+      }
+
+      function getErrorMessage(error) {
+        if (!error) return "Error tidak diketahui.";
+        if (error.message) return error.message;
+        return String(error);
+      }
+
+      function formatRupiah(value) {
+        return new Intl.NumberFormat("id-ID", {
+          style: "currency",
+          currency: "IDR",
+          maximumFractionDigits: 0
+        }).format(Number(value || 0));
+      }
+
+      function escapeHtml(value) {
+        return String(value || "")
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#039;");
+      }
+
+      initReport();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Salon Eyelash — Architecture Diagram v2</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#020617;color:#e2e8f0;font-family:'JetBrains Mono',monospace;min-height:100vh;padding:40px 20px;display:flex;flex-direction:column;align-items:center}
+.container{max-width:1200px;width:100%}
+.header{text-align:center;margin-bottom:40px}
+.header h1{font-size:28px;font-weight:700;color:#f1f5f9}
+.header .dot{display:inline-block;width:10px;height:10px;border-radius:50%;background:#22d3ee;margin-right:12px;animation:pulse 2s ease-in-out infinite}
+.header p{color:#94a3b8;font-size:13px;margin-top:8px}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+
+/* Hierarchy Diagram */
+.diagram-card{background:#0f172a;border:1px solid #1e293b;border-radius:12px;padding:32px;margin-bottom:32px;overflow-x:auto}
+.hierarchy{display:flex;flex-direction:column;align-items:center;gap:0;min-width:800px}
+.layer{width:100%;text-align:center;padding:12px 0;position:relative}
+.layer-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:12px;color:#475569}
+.layer-row{display:flex;justify-content:center;gap:16px;flex-wrap:wrap}
+.node{background:#1e293b;border-radius:8px;padding:14px 18px;min-width:180px;text-align:center;border:1px solid transparent;transition:all 0.2s}
+.node:hover{transform:translateY(-2px);box-shadow:0 4px 20px rgba(0,0,0,0.4)}
+.node.cyan{border-color:#22d3ee}.node.cyan .node-title{color:#22d3ee}
+.node.green{border-color:#34d399}.node.green .node-title{color:#34d399}
+.node.purple{border-color:#a78bfa}.node.purple .node-title{color:#a78bfa}
+.node.amber{border-color:#f59e0b}.node.amber .node-title{color:#f59e0b}
+.node.gray{border-color:#6b6865}.node.gray .node-title{color:#6b6865}
+.node.orange{border-color:#f97316}.node.orange .node-title{color:#f97316}
+.node-icon{font-size:20px;margin-bottom:4px}
+.node-title{font-size:12px;font-weight:600}
+.node-desc{font-size:9px;color:#94a3b8;margin-top:4px;line-height:1.5}
+.arrow-down{color:#334155;font-size:18px;padding:2px 0}
+.route-line{display:flex;justify-content:center;gap:8px;padding:4px 0}
+.route-badge{background:#0f172a;border:1px solid #1e293b;border-radius:4px;padding:2px 8px;font-size:9px;color:#64748b}
+
+/* Card Grid */
+.card-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:32px 0}
+.card{background:#0f172a;border:1px solid #1e293b;border-radius:8px;padding:20px}
+.card-header{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.card-dot{width:8px;height:8px;border-radius:50%}
+.card-dot.cyan{background:#22d3ee}
+.card-dot.green{background:#34d399}
+.card-dot.purple{background:#a78bfa}
+.card-dot.amber{background:#f59e0b}
+.card h3{font-size:13px;font-weight:600;color:#f1f5f9}
+.card ul{list-style:none;padding:0}
+.card li{color:#94a3b8;font-size:11px;padding:4px 0;border-bottom:1px solid rgba(30,41,59,0.5)}
+.card li:last-child{border-bottom:none}
+.footer{text-align:center;color:#475569;font-size:11px;margin-top:24px;padding-top:16px;border-top:1px solid #1e293b}
+
+.strikethrough{text-decoration:line-through;opacity:0.35}
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="header">
+  <h1><span class="dot"></span>Salon Eyelash — Architecture v2</h1>
+  <p>dev.beautynshine.web.id · POS Expo + ERP Core · May 2026</p>
+</div>
+
+<div class="diagram-card">
+<svg viewBox="0 0 1100 950" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto">
+  <defs>
+    <marker id="arrow-cyan" markerWidth="8" markerHeight="8" refX="8" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#22d3ee"/></marker>
+    <marker id="arrow-green" markerWidth="8" markerHeight="8" refX="8" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#34d399"/></marker>
+    <marker id="arrow-purple" markerWidth="8" markerHeight="8" refX="8" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#a78bfa"/></marker>
+    <marker id="arrow-amber" markerWidth="8" markerHeight="8" refX="8" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#f59e0b"/></marker>
+    <marker id="arrow-gray" markerWidth="8" markerHeight="8" refX="8" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#6b6865"/></marker>
+  </defs>
+
+  <!-- Layer 1: Network -->
+  <rect x="50" y="40" width="1000" height="160" rx="8" fill="#0f172a" stroke="#22d3ee" stroke-width="1.5" stroke-dasharray="6,3" />
+  <text x="60" y="62" fill="#22d3ee" font-size="11" font-weight="700" letter-spacing="1.5">LAYER 1: NETWORK &amp; ROUTING</text>
+
+  <rect x="80" y="90" width="220" height="80" rx="6" fill="#1e293b" stroke="#22d3ee" stroke-width="1.5"/>
+  <text x="190" y="112" text-anchor="middle" fill="#22d3ee" font-size="12" font-weight="600">☁️ Cloudflare (DNS / CDN)</text>
+  <text x="190" y="130" text-anchor="middle" fill="#94a3b8" font-size="10">dev.beautynshine.web.id</text>
+  <text x="190" y="148" text-anchor="middle" fill="#94a3b8" font-size="10">Tunnel → localhost:8080</text>
+
+  <line x1="300" y1="130" x2="340" y2="130" stroke="#22d3ee" stroke-width="2" marker-end="url(#arrow-cyan)"/>
+
+  <rect x="350" y="90" width="220" height="80" rx="6" fill="#1e293b" stroke="#22d3ee" stroke-width="1.5"/>
+  <text x="460" y="112" text-anchor="middle" fill="#22d3ee" font-size="12" font-weight="600">🔒 cloudflared Tunnel</text>
+  <text x="460" y="130" text-anchor="middle" fill="#94a3b8" font-size="10">→ localhost:8080</text>
+  <text x="460" y="148" text-anchor="middle" fill="#94a3b8" font-size="10">(2 processes)</text>
+
+  <line x1="570" y1="130" x2="610" y2="130" stroke="#22d3ee" stroke-width="2" marker-end="url(#arrow-cyan)"/>
+
+  <rect x="620" y="90" width="220" height="80" rx="6" fill="#1e293b" stroke="#22d3ee" stroke-width="1.5"/>
+  <text x="730" y="112" text-anchor="middle" fill="#22d3ee" font-size="12" font-weight="600">⚙️ nginx :8080</text>
+  <text x="730" y="130" text-anchor="middle" fill="#94a3b8" font-size="10">Path-based Reverse Proxy</text>
+  <text x="730" y="148" text-anchor="middle" fill="#94a3b8" font-size="10">Route: / → / → /erp</text>
+
+  <!-- Layer 2: Frontend -->
+  <rect x="50" y="230" width="1000" height="170" rx="8" fill="#0f172a" stroke="#34d399" stroke-width="1.5" stroke-dasharray="6,3" />
+  <text x="60" y="252" fill="#34d399" font-size="11" font-weight="700" letter-spacing="1.5">LAYER 2: FRONTEND</text>
+
+  <rect x="80" y="280" width="260" height="100" rx="6" fill="#1e293b" stroke="#34d399" stroke-width="1.5"/>
+  <text x="210" y="302" text-anchor="middle" fill="#34d399" font-size="12" font-weight="600">📱 POS Expo</text>
+  <text x="210" y="320" text-anchor="middle" fill="#94a3b8" font-size="10">React Native 0.81 + Expo SDK 54</text>
+  <text x="210" y="338" text-anchor="middle" fill="#94a3b8" font-size="10">TypeScript · Mobile Web / PWA</text>
+  <text x="210" y="356" text-anchor="middle" fill="#64748b" font-size="9">apps/pos/dist/</text>
+
+  <rect x="380" y="280" width="260" height="100" rx="6" fill="#1e293b" stroke="#34d399" stroke-width="1.5"/>
+  <text x="510" y="302" text-anchor="middle" fill="#34d399" font-size="12" font-weight="600">🏢 ERP Core</text>
+  <text x="510" y="320" text-anchor="middle" fill="#94a3b8" font-size="10">React 19 + Vite 8</text>
+  <text x="510" y="338" text-anchor="middle" fill="#94a3b8" font-size="10">TypeScript · Dark Theme</text>
+  <text x="510" y="356" text-anchor="middle" fill="#64748b" font-size="9">apps/erp-core/frontend/</text>
+
+  <rect x="680" y="280" width="220" height="80" rx="6" fill="#1e293b" stroke="#6b6865" stroke-width="1" opacity="0.5"/>
+  <text x="790" y="302" text-anchor="middle" fill="#6b6865" font-size="11" font-weight="600">⚠️ OLD Express SPA</text>
+  <text x="790" y="320" text-anchor="middle" fill="#6b6865" font-size="10">Read-only backup</text>
+  <text x="790" y="338" text-anchor="middle" fill="#6b6865" font-size="10">:3000 (Docker)</text>
+
+  <!-- Route labels -->
+  <text x="130" y="270" fill="#22d3ee" font-size="9">/pos-expo/</text>
+  <text x="470" y="270" fill="#34d399" font-size="9">/erp/</text>
+
+  <line x1="730" y1="170" x2="210" y2="275" stroke="#22d3ee" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arrow-cyan)"/>
+  <line x1="730" y1="170" x2="510" y2="275" stroke="#34d399" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arrow-green)"/>
+
+  <!-- Layer 3: Backend -->
+  <rect x="50" y="440" width="1000" height="210" rx="8" fill="#0f172a" stroke="#a78bfa" stroke-width="1.5" stroke-dasharray="6,3" />
+  <text x="60" y="462" fill="#a78bfa" font-size="11" font-weight="700" letter-spacing="1.5">LAYER 3: BACKEND API</text>
+
+  <rect x="80" y="490" width="300" height="140" rx="6" fill="#1e293b" stroke="#a78bfa" stroke-width="1.5"/>
+  <text x="230" y="512" text-anchor="middle" fill="#a78bfa" font-size="12" font-weight="600">🐍 ERP FastAPI (Python 3.11)</text>
+  <text x="230" y="530" text-anchor="middle" fill="#94a3b8" font-size="10">Uvicorn · SQLAlchemy ORM · Pydantic</text>
+  <text x="230" y="548" text-anchor="middle" fill="#94a3b8" font-size="10">:5000</text>
+  <text x="230" y="566" text-anchor="middle" fill="#64748b" font-size="9">apps/erp-core/backend-python/</text>
+  <text x="230" y="584" text-anchor="middle" fill="#94a3b8" font-size="10">JWT Auth · bcrypt</text>
+  <text x="230" y="602" text-anchor="middle" fill="#64748b" font-size="9">Alembic Migrations</text>
+
+  <rect x="420" y="490" width="300" height="140" rx="6" fill="#1e293b" stroke="#a78bfa" stroke-width="1.5"/>
+  <text x="570" y="512" text-anchor="middle" fill="#a78bfa" font-size="11" font-weight="600">🗄️ API Module Endpoints</text>
+  <text x="570" y="530" text-anchor="middle" fill="#94a3b8" font-size="9">/initial-data  /transaction  /customer</text>
+  <text x="570" y="545" text-anchor="middle" fill="#94a3b8" font-size="9">/receipt/{code}  /dashboard-stats</text>
+  <text x="570" y="560" text-anchor="middle" fill="#94a3b8" font-size="9">/auth/login  /bookings  /expenses</text>
+  <text x="570" y="575" text-anchor="middle" fill="#94a3b8" font-size="9">/pos/session/*  /treatments</text>
+  <text x="570" y="590" text-anchor="middle" fill="#94a3b8" font-size="9">/products  /services  /staff</text>
+  <text x="570" y="605" text-anchor="middle" fill="#94a3b8" font-size="9">/customers  /suppliers  /accounts</text>
+  <text x="570" y="620" text-anchor="middle" fill="#64748b" font-size="8">+ inventory, manufacturing, finance, reports</text>
+
+  <!-- Route rewrites -->
+  <text x="210" y="435" fill="#22d3ee" font-size="8">/api/* → /erp/api/v1/*</text>
+  <text x="510" y="435" fill="#34d399" font-size="8">/erp/api/* → /erp/api/v1/*</text>
+  <line x1="730" y1="170" x2="210" y2="435" stroke="#22d3ee" stroke-width="1" stroke-dasharray="3,3"/>
+  <line x1="730" y1="170" x2="510" y2="435" stroke="#34d399" stroke-width="1" stroke-dasharray="3,3"/>
+
+  <line x1="380" y1="560" x2="420" y2="560" stroke="#a78bfa" stroke-width="1.5" marker-end="url(#arrow-purple)"/>
+
+  <!-- Layer 4: Database -->
+  <rect x="50" y="690" width="1000" height="150" rx="8" fill="#0f172a" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="6,3" />
+  <text x="60" y="712" fill="#f59e0b" font-size="11" font-weight="700" letter-spacing="1.5">LAYER 4: DATABASE &amp; INFRASTRUCTURE</text>
+
+  <rect x="80" y="735" width="260" height="80" rx="6" fill="#1e293b" stroke="#f59e0b" stroke-width="1.5"/>
+  <text x="210" y="757" text-anchor="middle" fill="#f59e0b" font-size="12" font-weight="600">💾 PostgreSQL 16</text>
+  <text x="210" y="775" text-anchor="middle" fill="#94a3b8" font-size="10">salon_v2 · :5433</text>
+  <text x="210" y="793" text-anchor="middle" fill="#94a3b8" font-size="10">SHARED: ERP + POS Expo</text>
+
+  <rect x="380" y="735" width="260" height="80" rx="6" fill="#1e293b" stroke="#6b6865" stroke-width="1"/>
+  <text x="510" y="757" text-anchor="middle" fill="#6b6865" font-size="11" font-weight="600">💾 PostgreSQL 16</text>
+  <text x="510" y="775" text-anchor="middle" fill="#6b6865" font-size="10">salon_erp · :5432</text>
+  <text x="510" y="793" text-anchor="middle" fill="#6b6865" font-size="10">Legacy (Express backup)</text>
+
+  <rect x="680" y="735" width="220" height="80" rx="6" fill="#1e293b" stroke="#f59e0b" stroke-width="1.5"/>
+  <text x="790" y="757" text-anchor="middle" fill="#f59e0b" font-size="12" font-weight="600">🐳 Docker Compose</text>
+  <text x="790" y="775" text-anchor="middle" fill="#94a3b8" font-size="10">postgres:16 (x2)</text>
+  <text x="790" y="793" text-anchor="middle" fill="#94a3b8" font-size="10">Express Container (:3000)</text>
+
+  <line x1="230" y1="630" x2="210" y2="730" stroke="#f59e0b" stroke-width="1.5" marker-end="url(#arrow-amber)"/>
+
+  <!-- REMOVED: POS Lite section -->
+  <rect x="80" y="860" width="900" height="40" rx="4" fill="#1e293b" stroke="#ef4444" stroke-width="1" stroke-dasharray="4,3" opacity="0.4"/>
+  <text x="530" y="885" text-anchor="middle" fill="#ef4444" font-size="10">✕ POS Lite (Frontend + Backend NestJS) — REMOVED May 2026</text>
+</svg>
+</div>
+
+<!-- Sidebar Structure -->
+<div class="card-grid">
+  <div class="card">
+    <div class="card-header">
+      <div class="card-dot cyan"></div>
+      <h3>POS Expo</h3>
+    </div>
+    <ul>
+      <li>• React Native + Expo SDK 54</li>
+      <li>• TypeScript</li>
+      <li>• Served at /pos-expo/</li>
+      <li>• API: /api/* → nginx → FastAPI</li>
+      <li>• Offline-capable (PWA)</li>
+    </ul>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <div class="card-dot green"></div>
+      <h3>ERP Core</h3>
+    </div>
+    <ul>
+      <li>• React 19 + Vite 8</li>
+      <li>• TypeScript · Dark Theme</li>
+      <li>• Served at /erp/</li>
+      <li>• API: /erp/api/* → FastAPI</li>
+      <li>• 7 sidebar menu sections</li>
+    </ul>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <div class="card-dot purple"></div>
+      <h3>ERP Backend (FastAPI)</h3>
+    </div>
+    <ul>
+      <li>• Python 3.11 + Uvicorn</li>
+      <li>• SQLAlchemy ORM</li>
+      <li>• JWT Auth + bcrypt</li>
+      <li>• Pydantic validation</li>
+      <li>• 30+ module endpoints</li>
+    </ul>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <div class="card-dot amber"></div>
+      <h3>Infrastructure</h3>
+    </div>
+    <ul>
+      <li>• PostgreSQL 16 (salon_v2)</li>
+      <li>• Docker Compose</li>
+      <li>• Nginx Reverse Proxy</li>
+      <li>• Cloudflare Tunnel + CDN</li>
+      <li>• Ubuntu 22.04 VPS</li>
+    </ul>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <div class="card-dot cyan"></div>
+      <h3>ERP Sidebar Sections</h3>
+    </div>
+    <ul>
+      <li>• 📊 Dashboard</li>
+      <li>• 📋 Transaksi (3)</li>
+      <li>• 💰 Keuangan (4)</li>
+      <li>• 📦 Inventory (4)</li>
+      <li>• 🏭 Manufaktur (2)</li>
+      <li>• 📋 Master (8) · 📒 Akuntansi (1)</li>
+      <li>• ⚙️ Sistem (3)</li>
+    </ul>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <div class="card-dot gray"></div>
+      <h3>Routing Map</h3>
+    </div>
+    <ul>
+      <li>• / → 301 → /pos-expo/</li>
+      <li>• /pos-expo/ → Expo FE</li>
+      <li>• /erp/ → ERP React FE</li>
+      <li>• /api/* → /erp/api/v1/* → FastAPI</li>
+      <li>• /erp/api/* → /erp/api/v1/* → FastAPI</li>
+      <li>• /_expo/ → Expo assets</li>
+    </ul>
+  </div>
+</div>
+
+<div class="footer">
+  Generated by Hermes Agent · Salon Eyelash Architecture v2 · May 2026<br>
+  POS Lite removed · POS Expo + ERP Core only
+</div>
+
+</div>
+</body>
+</html>

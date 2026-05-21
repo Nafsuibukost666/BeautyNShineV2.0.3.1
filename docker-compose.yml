@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  # ============================================================================
+  # db-v2 — PostgreSQL 16 Database
+  # ============================================================================
+  db-v2:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: salon
+      POSTGRES_PASSWORD: salon123
+      POSTGRES_DB: salon_v2
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata-v2:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U salon -d salon_v2"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # ============================================================================
+  # pos-backend — POS Lite Backend API (NestJS)
+  # ============================================================================
+  pos-backend:
+    build: ./apps/pos-lite/backend
+    ports:
+      - "4000:4000"
+    environment:
+      DB_HOST: db-v2
+      DB_PORT: 5432
+      DB_USER: salon
+      DB_PASSWORD: salon123
+      DB_NAME: salon_v2
+      PORT: 4000
+      JWT_SECRET: salon-v2-secret-key-2026
+    depends_on:
+      db-v2:
+        condition: service_healthy
+
+  # ============================================================================
+  # pos-frontend — POS Lite Frontend (Nginx + Vite SPA)
+  # ============================================================================
+  pos-frontend:
+    build: ./apps/pos-lite/frontend
+    ports:
+      - "4001:80"
+    depends_on:
+      - pos-backend
+
+volumes:
+  pgdata-v2:
