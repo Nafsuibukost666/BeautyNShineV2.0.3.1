@@ -19,10 +19,10 @@ function MenuGroup({ label, icon, defaultOpen, children }: {
           display: 'flex', alignItems: 'center', gap: 12,
           padding: '10px 14px', borderRadius: 8,
           cursor: 'pointer', userSelect: 'none',
-          color: '#a8a4a0', fontSize: 14, fontWeight: 600,
+          color: '#4e4545', fontSize: 14, fontWeight: 600,
           transition: 'all 0.2s',
         }}
-        onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.04)'}
+        onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255, 209, 176, 0.22)'}
         onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
       >
         <span style={{ fontSize: 18, width: 24, textAlign: 'center' }}>{icon}</span>
@@ -51,8 +51,10 @@ function MenuGroup({ label, icon, defaultOpen, children }: {
 const sidebarStyle: React.CSSProperties = {
   width: 260,
   height: '100vh',
-  background: 'linear-gradient(180deg, #1a1a24 0%, #15151e 100%)',
-  borderRight: '1px solid #2e2e3e',
+  background: 'rgba(255, 255, 255, 0.78)',
+  backdropFilter: 'blur(12px)',
+  borderRight: '1px solid rgba(209, 195, 195, 0.85)',
+  boxShadow: '8px 0 28px rgba(27, 28, 28, 0.04)',
   display: 'flex',
   flexDirection: 'column',
   position: 'fixed',
@@ -64,7 +66,7 @@ const sidebarStyle: React.CSSProperties = {
 
 const logoStyle: React.CSSProperties = {
   padding: '24px 20px',
-  borderBottom: '1px solid #2e2e3e',
+  borderBottom: '1px solid rgba(209, 195, 195, 0.85)',
   display: 'flex',
   alignItems: 'center',
   gap: 12,
@@ -74,13 +76,13 @@ const logoIconStyle: React.CSSProperties = {
   width: 36,
   height: 36,
   borderRadius: 10,
-  background: 'linear-gradient(135deg, #c4895e, #e8a87c)',
+  background: 'linear-gradient(135deg, #303030, #675c5c)',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
   fontSize: 18,
   fontWeight: 700,
-  color: '#fff',
+  color: '#ffffff',
   flexShrink: 0,
 };
 
@@ -99,7 +101,7 @@ const linkBase: React.CSSProperties = {
   padding: '10px 14px',
   borderRadius: 8,
   textDecoration: 'none',
-  color: '#a8a4a0',
+  color: '#4e4545',
   fontSize: 14,
   fontWeight: 500,
   transition: 'all 0.2s',
@@ -111,7 +113,7 @@ const sectionLabelStyle: React.CSSProperties = {
   fontWeight: 700,
   textTransform: 'uppercase',
   letterSpacing: 1.2,
-  color: '#6b6865',
+  color: '#746767',
 };
 
 export default function Layout({ children }: { children: React.ReactNode }) {
@@ -133,8 +135,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const linkStyle = (path: string): React.CSSProperties => ({
     ...linkBase,
     ...(isActive(path) ? {
-      background: 'rgba(232, 168, 124, 0.12)',
-      color: '#e8a87c',
+      background: 'rgba(255, 209, 176, 0.45)',
+      color: '#79573c',
     } : {}),
   });
 
@@ -148,7 +150,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           end={item.path === '/'}
           style={linkStyle(item.path)}
           onMouseEnter={(e) => {
-            if (!isActive(item.path)) e.currentTarget.style.background = 'rgba(255,255,255,0.04)';
+            if (!isActive(item.path)) e.currentTarget.style.background = 'rgba(255, 209, 176, 0.22)';
           }}
           onMouseLeave={(e) => {
             if (!isActive(item.path)) e.currentTarget.style.background = 'transparent';
@@ -167,8 +169,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <div style={logoStyle}>
           <div style={logoIconStyle}>E</div>
           <div>
-            <div style={{ color: '#f0ece4', fontSize: 16, fontWeight: 700 }}>ERP Core</div>
-            <div style={{ color: '#6b6865', fontSize: 11 }}>Salon Management</div>
+            <div style={{ color: '#1b1c1c', fontSize: 16, fontWeight: 700, fontFamily: 'Playfair Display, serif' }}>ERP Core</div>
+            <div style={{ color: '#746767', fontSize: 11 }}>Salon Management</div>
           </div>
         </div>
 
@@ -176,7 +178,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           {/* Dashboard */}
           <div style={sectionLabelStyle}>UTAMA</div>
           <NavLink to="/" end style={linkStyle('/')}
-            onMouseEnter={(e) => { if (!isActive('/')) e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; }}
+            onMouseEnter={(e) => { if (!isActive('/')) e.currentTarget.style.background = 'rgba(255, 209, 176, 0.22)'; }}
             onMouseLeave={(e) => { if (!isActive('/')) e.currentTarget.style.background = 'transparent'; }}>
             <span style={{ fontSize: 18, width: 24, textAlign: 'center' }}>📊</span>
             <span>Dashboard</span>
@@ -266,20 +268,20 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           ])}
         </nav>
 
-        <div style={{ padding: '16px 20px', borderTop: '1px solid #2e2e3e', display: 'flex', alignItems: 'center', gap: 12 }}>
+        <div style={{ padding: '16px 20px', borderTop: '1px solid rgba(209, 195, 195, 0.85)', display: 'flex', alignItems: 'center', gap: 12 }}>
           <div style={{
             width: 32, height: 32, borderRadius: 8,
-            background: 'linear-gradient(135deg, #2a2a3e, #3a3a4e)',
+            background: 'linear-gradient(135deg, #f9e8e8, #ffffff)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontSize: 14, fontWeight: 600, color: '#e8a87c',
+            fontSize: 14, fontWeight: 600, color: '#79573c',
           }}>
             {user?.username?.[0]?.toUpperCase() || 'U'}
           </div>
           <div style={{ flex: 1, minWidth: 0 }}>
-            <div style={{ color: '#f0ece4', fontSize: 13, fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+            <div style={{ color: '#1b1c1c', fontSize: 13, fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
               {user?.username || 'Admin'}
             </div>
-            <div style={{ color: '#6b6865', fontSize: 11 }}>{user?.role || 'Owner'}</div>
+            <div style={{ color: '#746767', fontSize: 11 }}>{user?.role || 'Owner'}</div>
           </div>
           <button onClick={handleLogout}
             style={{
@@ -292,8 +294,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         </div>
       </aside>
 
-      <div style={{ marginLeft: 260, minHeight: '100vh' }}>
-        <main style={{ padding: '28px 32px', maxWidth: 1400 }}>
+      <div style={{ marginLeft: 260, minHeight: '100vh', flex: 1 }}>
+        <main style={{ padding: '32px 40px', maxWidth: 1400 }}>
           {children}
         </main>
       </div>

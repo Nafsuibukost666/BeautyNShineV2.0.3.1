@@ -1,51 +1,87 @@
 /**
- * Design System — Premium Dark Theme
- * Inspired by: Linear, Revolut, Stripe
- * Accent: Warm Orange (#e8a87c → refined f0a070)
+ * Design System — Serene Lash & Beauty
+ * Effortless Elegance: warm petal surfaces, rose-gold accents, deep-charcoal text.
+ * Source: DESIGN.md
  */
+
+export const designTokens = {
+  colors: {
+    surface: '#fcf9f8',
+    surfaceDim: '#dcd9d9',
+    surfaceBright: '#fcf9f8',
+    surfaceContainerLowest: '#ffffff',
+    surfaceContainerLow: '#f6f3f2',
+    surfaceContainer: '#f0eded',
+    surfaceContainerHigh: '#eae7e7',
+    surfaceContainerHighest: '#e4e2e1',
+    onSurface: '#1b1c1c',
+    onSurfaceVariant: '#4e4545',
+    inverseSurface: '#303030',
+    inverseOnSurface: '#f3f0ef',
+    outline: '#7f7475',
+    outlineVariant: '#d1c3c3',
+    surfaceTint: '#675c5c',
+    primary: '#675c5c',
+    onPrimary: '#ffffff',
+    primaryContainer: '#f9e8e8',
+    onPrimaryContainer: '#746767',
+    secondary: '#79573c',
+    onSecondary: '#ffffff',
+    secondaryContainer: '#ffd1b0',
+    onSecondaryContainer: '#7a583d',
+    tertiary: '#735761',
+    onTertiary: '#ffffff',
+    tertiaryContainer: '#ffe5ed',
+    onTertiaryContainer: '#7f626d',
+    error: '#ba1a1a',
+    onError: '#ffffff',
+    errorContainer: '#ffdad6',
+    onErrorContainer: '#93000a',
+  },
+} as const;
 
 export const theme = {
   // ─── Colors ───────────────────────────────
   colors: {
-    // Backgrounds
-    bg: '#0a0e1a',
-    bgCard: '#121726',
-    bgCardHover: '#181d30',
-    bgInput: '#0d1222',
-    bgElevated: '#1a2038',
+    // Backgrounds — light, warm, tactile surfaces
+    bg: '#fcf9f8',
+    bgCard: '#ffffff',
+    bgCardHover: '#f6f3f2',
+    bgInput: '#ffffff',
+    bgElevated: '#f9e8e8',
 
     // Borders
-    border: '#1e2640',
-    borderLight: '#2a3350',
-    borderFocus: 'rgba(240, 160, 112, 0.4)',
+    border: '#d1c3c3',
+    borderLight: '#e4e2e1',
+    borderFocus: 'rgba(121, 87, 60, 0.38)',
 
     // Text
-    text: '#f0f2f8',
-    textSecondary: '#8b92b0',
-    textMuted: '#5a6180',
-    textInverse: '#0a0e1a',
+    text: '#1b1c1c',
+    textSecondary: '#4e4545',
+    textMuted: '#746767',
+    textInverse: '#ffffff',
 
-    // Accent — Warm Orange
-    accent: '#f0a070',
-    accentLight: 'rgba(240, 160, 112, 0.12)',
-    accentGlow: 'rgba(240, 160, 112, 0.25)',
-    accentGradient: ['#f0a070', '#e88860'] as const,
+    // Accent — Rose Gold / Taupe
+    accent: '#79573c',
+    accentLight: 'rgba(255, 209, 176, 0.55)',
+    accentGlow: 'rgba(121, 87, 60, 0.16)',
+    accentGradient: ['#303030', '#675c5c'] as const,
 
-    // Status colors
-    success: '#34d399',
-    successLight: 'rgba(52, 211, 153, 0.12)',
-    warning: '#f59e0b',
-    warningLight: 'rgba(245, 158, 11, 0.12)',
-    error: '#ef4444',
-    errorLight: 'rgba(239, 68, 68, 0.12)',
-    info: '#22d3ee',
-    infoLight: 'rgba(34, 211, 238, 0.12)',
+    // Status colors tuned for light surface
+    success: '#2f7d57',
+    successLight: 'rgba(47, 125, 87, 0.11)',
+    warning: '#a36523',
+    warningLight: 'rgba(255, 209, 176, 0.52)',
+    error: '#ba1a1a',
+    errorLight: '#ffdad6',
+    info: '#4f667f',
+    infoLight: 'rgba(79, 102, 127, 0.10)',
 
     // Payment methods
-    cash: '#34d399',
-    qris: '#22d3ee',
-    debit: '#f59e0b',
-    transfer: '#8b5cf6',
+    cash: '#2f7d57',
+    qris: '#4f667f',
+    debit: '#a36523',
+    transfer: '#735761',
   },
 
   // ─── Spacing ───────────────────────────────
@@ -71,57 +107,57 @@ export const theme = {
 
   // ─── Typography ────────────────────────────
   typography: {
-    h1: { fontSize: 28, fontWeight: '700' as const, letterSpacing: -0.5 },
-    h2: { fontSize: 22, fontWeight: '700' as const, letterSpacing: -0.3 },
-    h3: { fontSize: 18, fontWeight: '700' as const, letterSpacing: -0.2 },
-    body: { fontSize: 15, fontWeight: '400' as const },
-    bodyBold: { fontSize: 15, fontWeight: '600' as const },
-    caption: { fontSize: 12, fontWeight: '500' as const },
-    small: { fontSize: 11, fontWeight: '400' as const },
-    label: { fontSize: 11, fontWeight: '600' as const, letterSpacing: 0.5, textTransform: 'uppercase' as const },
-    mono: { fontSize: 13, fontWeight: '500' as const, fontFamily: 'monospace' as const },
+    h1: { fontSize: 28, fontWeight: '600' as const, letterSpacing: -0.5, fontFamily: 'Playfair Display, serif' as const },
+    h2: { fontSize: 22, fontWeight: '600' as const, letterSpacing: -0.3, fontFamily: 'Playfair Display, serif' as const },
+    h3: { fontSize: 18, fontWeight: '600' as const, letterSpacing: -0.2, fontFamily: 'Playfair Display, serif' as const },
+    body: { fontSize: 15, fontWeight: '400' as const, fontFamily: 'Inter, sans-serif' as const },
+    bodyBold: { fontSize: 15, fontWeight: '600' as const, fontFamily: 'Inter, sans-serif' as const },
+    caption: { fontSize: 12, fontWeight: '500' as const, fontFamily: 'Inter, sans-serif' as const },
+    small: { fontSize: 11, fontWeight: '400' as const, fontFamily: 'Inter, sans-serif' as const },
+    label: { fontSize: 11, fontWeight: '600' as const, letterSpacing: 0.5, textTransform: 'uppercase' as const, fontFamily: 'Inter, sans-serif' as const },
+    mono: { fontSize: 13, fontWeight: '500' as const, fontFamily: 'Inter, monospace' as const },
   },
 
   // ─── Shadows ───────────────────────────────
   shadows: {
     card: {
-      shadowColor: '#000',
+      shadowColor: '#1b1c1c',
       shadowOffset: { width: 0, height: 4 },
-      shadowOpacity: 0.3,
-      shadowRadius: 12,
-      elevation: 8,
+      shadowOpacity: 0.04,
+      shadowRadius: 20,
+      elevation: 3,
     },
     elevated: {
-      shadowColor: '#000',
-      shadowOffset: { width: 0, height: 8 },
-      shadowOpacity: 0.4,
-      shadowRadius: 24,
-      elevation: 16,
+      shadowColor: '#1b1c1c',
+      shadowOffset: { width: 0, height: 12 },
+      shadowOpacity: 0.10,
+      shadowRadius: 32,
+      elevation: 10,
     },
     glow: {
-      shadowColor: '#f0a070',
-      shadowOffset: { width: 0, height: 0 },
-      shadowOpacity: 0.2,
-      shadowRadius: 20,
-      elevation: 6,
+      shadowColor: '#79573c',
+      shadowOffset: { width: 0, height: 8 },
+      shadowOpacity: 0.12,
+      shadowRadius: 18,
+      elevation: 4,
     },
   },
 
   // ─── Glass Effect ──────────────────────────
   glass: {
-    background: 'rgba(18, 23, 38, 0.85)',
+    background: 'rgba(255, 255, 255, 0.78)',
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.06)',
+    borderColor: 'rgba(209, 195, 195, 0.8)',
   },
 
   // ─── Gradients ─────────────────────────────
   gradients: {
-    accent: ['#f0a070', '#e88860'] as const,
-    success: ['#34d399', '#2dd4bf'] as const,
-    info: ['#22d3ee', '#06b6d4'] as const,
-    warning: ['#f59e0b', '#d97706'] as const,
-    error: ['#ef4444', '#dc2626'] as const,
-    purple: ['#8b5cf6', '#6d28d9'] as const,
+    accent: ['#303030', '#675c5c'] as const,
+    success: ['#2f7d57', '#4caf7d'] as const,
+    info: ['#4f667f', '#7f98b4'] as const,
+    warning: ['#79573c', '#a36523'] as const,
+    error: ['#ba1a1a', '#93000a'] as const,
+    purple: ['#735761', '#7f626d'] as const,
   },
 } as const;
 
